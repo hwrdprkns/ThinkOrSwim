@@ -1,36 +1,89 @@
-#http://www.candlesticker.com/Bearish.asp
-#http://www.candlesticker.com/Bullish.asp
+#HTTP://WWW.CANDLESTICKER.COM/BEARISH.ASP
+#HTTP://WWW.CANDLESTICKER.COM/BULLISH.ASP
 ##################################################################
 #CANDLESTICKER-BEARISH-HIGH1
 #HIGH RELIABILITY
-darkCloudCover() or kicking().bearish or abandonedBaby().bearish or eveningStar() or eveningDojiStar()
+DARKCLOUDCOVER() OR KICKING().BEARISH OR ABANDONEDBABY().BEARISH OR EVENINGSTAR() OR EVENINGDOJISTAR()
 ##################################################################
 #CANDLESTICKER-BEARISH-HIGH2
 #HIGH RELIABILITY
-threeblackCrows() or threeinsideDown() or threeoutsideDown() or upsideGapTwoCrows()
+THREEBLACKCROWS() OR THREEINSIDEDOWN() OR THREEOUTSIDEDOWN() OR ENGULFING().BEARISH
 ##################################################################
-#CANDLESTICKER-BEARISH-MED1
+#CANDLESTICKER-BEARISH-MED3
 #MED RELIABILITY
-engulfing().bearish or haramiCross().bearish or advanceBlock() or deliberation()
+UPSIDEGAPTWOCROWS() OR HARAMICROSS().BEARISH OR ADVANCEBLOCK() OR DELIBERATION()
 ##################################################################
 #CANDLESTICKER-BULLISH-HIGH1
 #HIGH RELIABILITY
-piercingLine() or kicking().bullish or abandonedBaby() or morningDojiStar() or morningStar()
+PIERCINGLINE() OR KICKING().BULLISH OR ABANDONEDBABY() OR MORNINGDOJISTAR() OR MORNINGSTAR()
 ##################################################################
 #CANDLESTICKER-BULLISH-HIGH1
 #HIGH RELIABILITY
-threeinsideUp() or threeoutsideUp() or threewhiteSoldiers()
+THREEINSIDEUP() OR THREEOUTSIDEUP() OR THREEWHITESOLDIERS() OR ENGULFING().BULLISH
 ##################################################################
-#CANDLESTICKER-BULLISH-MED1
+#CANDLESTICKER-BULLISH-MED3
 #MED RELIABILITY
-Engulfing().bullish  or haramiCross().bullish or homingPigeon() or threestarsInTheSouth()
+MEETINGLINES().BULLISH OR HARAMICROSS().BULLISH OR HOMINGPIGEON() OR THREESTARSINTHESOUTH()
 ##################################################################
-#BULL-DMIStochasticExtreme
-crosses(DMI_StochasticExtreme("high low length" = 14),10,crossingDirection.ABOVE)
+#BULL-DMISTOCHASTICEXTREME
+CROSSES(DMI_STOCHASTICEXTREME("HIGH LOW LENGTH" = 14),10,CROSSINGDIRECTION.ABOVE)
 ##################################################################
-#StochasticCrossover
-#StochasticSLOW (when they cross):
-#EX: crosses(stochastic, 80, CrossingDirection.Above)
-crosses(Round(SimpleMovingAvg(100*((Close-Lowest(Low,14))/(Highest(high,14)-Lowest(Low,14))), length = 3)),Round(SimpleMovingAvg(SimpleMovingAvg(100*((Close-Lowest(Low,14))/(Highest(high,14)-Lowest(Low,14))), length = 3), length = 3)), crossingDirection.ABOVE) OR
-crosses(Round(SimpleMovingAvg(100*((Close-Lowest(Low,14))/(Highest(high,14)-Lowest(Low,14))), length = 3)),Round(SimpleMovingAvg(SimpleMovingAvg(100*((Close-Lowest(Low,14))/(Highest(high,14)-Lowest(Low,14))), length = 3), length = 3)), crossingDirection.BELOW)
+#STOCHASTICCROSSOVER
+#STOCHASTICSLOW (WHEN THEY CROSS):
+#EX: CROSSES(STOCHASTIC, 80, CROSSINGDIRECTION.ABOVE)
+CROSSES(ROUND(SIMPLEMOVINGAVG(100*((CLOSE-LOWEST(LOW,14))/(HIGHEST(HIGH,14)-LOWEST(LOW,14))), LENGTH = 3)),ROUND(SIMPLEMOVINGAVG(SIMPLEMOVINGAVG(100*((CLOSE-LOWEST(LOW,14))/(HIGHEST(HIGH,14)-LOWEST(LOW,14))), LENGTH = 3), LENGTH = 3)), CROSSINGDIRECTION.ABOVE) OR
+CROSSES(ROUND(SIMPLEMOVINGAVG(100*((CLOSE-LOWEST(LOW,14))/(HIGHEST(HIGH,14)-LOWEST(LOW,14))), LENGTH = 3)),ROUND(SIMPLEMOVINGAVG(SIMPLEMOVINGAVG(100*((CLOSE-LOWEST(LOW,14))/(HIGHEST(HIGH,14)-LOWEST(LOW,14))), LENGTH = 3), LENGTH = 3)), CROSSINGDIRECTION.BELOW)
 ##################################################################
+# STOCKS GATHERING MOMENTUM
+# 3 DAYS UP, PRICE AND VOLUME (BULLISH)
+(CLOSE > CLOSE[1] AND
+CLOSE [1] > CLOSE [2] AND
+CLOSE [2] > CLOSE[3] AND
+VOLUMEAVG() > VOLUMEAVG()[1] AND
+VOLUMEAVG()[1] > VOLUMEAVG()[2] AND
+VOLUMEAVG()[2] > VOLUMEAVG()[3])
+OR
+# 3 DAYS DOWN IN PRICE, 3 DAYS UP IN VOLUME (BEARISH REVERSAL)
+(CLOSE < CLOSE[1] AND
+CLOSE [1] < CLOSE [2] AND
+CLOSE [2] < CLOSE[3] AND
+VOLUMEAVG() > VOLUMEAVG()[1] AND
+VOLUMEAVG()[1] > VOLUMEAVG()[2] AND
+VOLUMEAVG()[2] > VOLUMEAVG()[3])
+OR
+# 3 DAYS DOWN IN PRICE, 3 DAYS DOWN IN VOLUME (BULLISH REVERSAL)
+(CLOSE < CLOSE[1] AND
+CLOSE [1] < CLOSE [2] AND
+CLOSE [2] < CLOSE[3] AND
+VOLUMEAVG() < VOLUMEAVG()[1] AND
+VOLUMEAVG()[1] < VOLUMEAVG()[2] AND
+VOLUMEAVG()[2] < VOLUMEAVG()[3])
+##################################################################
+# CONSOLIDATION BREAKOUT
+# SYMMETRICAL CONSOLIDATION
+HIGHEST(DATA = CLOSE, LENGTH = 30)[60]>HIGHEST(DATA = CLOSE, LENGTH = 30)[30] AND
+HIGHEST(DATA = CLOSE, LENGTH = 30)[30]>HIGHEST(DATA = CLOSE, LENGTH = 30) AND
+LOWEST(DATA = CLOSE, LENGTH = 30)[60]<LOWEST(DATA = CLOSE, LENGTH = 30)[30] AND
+LOWEST(DATA = CLOSE, LENGTH = 30)[30]<LOWEST(DATA = CLOSE, LENGTH = 30) AND
+# DECLINING VOLUME
+VOLUMEAVG().VOLAVG[90] > VOLUMEAVG().VOLAVG AND
+# HIGHER CLOSE TODAY
+CLOSE()>CLOSE()[1] AND
+# HEAVY VOLUME TODAY
+VOLUMEAVG(LENGTH = 10) > VOLUMEAVG(LENGTH = 50).VOLAVG
+##################################################################
+# ASCENDING TRIANGLE BREAKOUT
+# BOTTOM SIDE CONSOLIDATION OVER LAST 90 DAYS
+LOWEST(DATA = CLOSE, LENGTH = 30)[60]<LOWEST(DATA = CLOSE, LENGTH = 30)[30] AND
+LOWEST(DATA = CLOSE, LENGTH = 30)[30]<LOWEST(DATA = CLOSE, LENGTH = 30) AND
+# DECLINING VOLUME OVER LAST 60 DAYS
+VOLUMEAVG().VOLAVG[60] > VOLUMEAVG().VOLAVG AND
+# NEW 60 DAY HIGH
+CLOSE()>HIGHEST(DATA = CLOSE, LENGTH = 60)[1] AND
+# HEAVY VOLUME TODAY
+VOLUMEAVG(LENGTH = 10) > VOLUMEAVG(LENGTH = 50).VOLAVG
+##################################################################
+# DARVAS BOX BREAKOUT
+(CLOSE > HIGHEST(DATA = HIGH, LENGTH = 8)[1] OR 
+CLOSE < LOWEST(DATA = LOW, LENGTH = 8)[1]) AND
+VOLUMEAVG(LENGTH = 10) > VOLUMEAVG(LENGTH = 10).VOLAVG

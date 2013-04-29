@@ -90,3 +90,9 @@ VOLUMEAVG(LENGTH = 10) > VOLUMEAVG().VOLAVG
 (CLOSE > HIGHEST(DATA = HIGH, LENGTH = 8)[1] OR 
 CLOSE < LOWEST(DATA = LOW, LENGTH = 8)[1]) AND
 VOLUMEAVG(LENGTH = 10) > VOLUMEAVG(LENGTH = 10).VOLAVG
+##################################################################
+# SWING BOX BREAKOUT
+(CLOSE > HIGHEST(DATA = CLOSE, LENGTH = 2)[1] OR
+CLOSE < LOWEST(DATA = CLOSE, LENGTH = 2)[1]) AND
+VOLUMEAVG(LENGTH = 50) > VOLUMEAVG(LENGTH = 50).VOLAVG
+##################################################################

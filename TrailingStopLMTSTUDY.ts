@@ -1,14 +1,16 @@
 ##############TrailingStopLMT#############
 # WGRIFFITH2 (c) 2013
 
-input factor = 2;
+#Study works only for LONG positions
+input side = "LONG";
+input factor = 1;
 input periods = 3;
 
-def target = close + atrWilder()*factor;
+def atr = close + atrWilder()*factor;
 def RollingLow = Lowest(data = LOW(), length = periods)[1];
 
-plot LMT = target;
-LMT.SetDefaultColor(GetColor(1));
+plot Pyramid = atr;
+Pyramid.SetDefaultColor(GetColor(9));
 
 plot StopLoss = RollingLow;
 StopLoss.SetDefaultColor(GetColor(5));

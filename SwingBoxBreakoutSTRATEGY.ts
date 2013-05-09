@@ -2,13 +2,13 @@
 # WGRIFFITH2 (C) 2013
 
 input side = "LONG";
-input factor = 2;
 input periods = 3;
 
+def new_period = periods - 1;
 def entryPrice = entryPrice();
 def RollingLow = Lowest(data = LOW(), length = periods)[1];
 def Stop = (Low <= RollingLow);
-def Breakout = (CLOSE > HIGHEST(DATA = CLOSE, LENGTH = 2)[1]) AND VOLUMEAVG(LENGTH = 50) > VOLUMEAVG(LENGTH = 50).VOLAVG;
+def Breakout = (CLOSE > HIGHEST(DATA = CLOSE, LENGTH = new_period)[1]) AND VOLUMEAVG(LENGTH = 50) > VOLUMEAVG(LENGTH = 50).VOLAVG;
 def shares = round(10000 / CLOSE);
 
 #LONG POSITION:

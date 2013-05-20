@@ -15,7 +15,7 @@ def RedStopLoss = StopLoss is True;
 def ttl_stops = sum(RedStopLoss,timeframe);
 def ttl_breaks = sum(GreenLMT,timeframe);
 
-plot ratio = if(ttl_breaks==0,1.0,ttl_breaks)/if(ttl_stops==0,1.0,ttl_stops);
-ratio.setDefaultColor(GetColor(3));
+plot ratio = ttl_breaks/if(ttl_stops==0,1.0,ttl_stops);
+ratio.setDefaultColor(GetColor(4));
 
 #########################################

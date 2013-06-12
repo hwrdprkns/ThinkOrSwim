@@ -4,9 +4,8 @@
 input periods = 3;
 def RollingLow = Lowest(data = LOW(), length = periods)[1];
 
-plot StopLoss = RollingLow;
+plot StopLoss = RollingLow[-1];
 
-StopLoss.SetDefaultColor(Color.DOWNTICK);
-StopLoss.SetPaintingStrategy(PaintingStrategy.POINTS);
+StopLoss.SetDefaultColor(CreateColor(11, 0, 78));
 
 ##############################################

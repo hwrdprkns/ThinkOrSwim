@@ -96,5 +96,6 @@ TRENDQUALITY("TREND LENGTH" = 3, "NOISE LENGTH" = 90) > 0
 # HEAVY VOLUME/STOCHASTIC BUY AREA
 VolumeAvg(LENGTH = 20) > VolumeAvg(LENGTH = 20).VOLAVG and
 StochasticSlow("K PERIOD" = 14, "D PERIOD" = 3) <= 50 and
-STOCHASTICSLOWTREND() > 0
+STOCHASTICSLOWTREND() > 0 and
+Close>Close[1]
 ##################################################################

@@ -1,11 +1,11 @@
-##############RollingTrailingStop#############
-# WGRIFFITH2 (c) 2013
+##############ROLLINGTRAILINGSTOP#############
+# WGRIFFITH2 (C) 2013
 
-input periods = 3;
-def RollingLow = Lowest(data = LOW(), length = periods)[1];
+INPUT PERIODS = 3;
+DEF ROLLINGLOW = LOWEST(DATA = LOW(), LENGTH = PERIODS)[1];
 
-plot StopLoss = RollingLow[-1];
+PLOT STOPLOSS = ROLLINGLOW[-1];
 
-StopLoss.SetDefaultColor(CreateColor(11, 0, 78));
+STOPLOSS.SETDEFAULTCOLOR(CREATECOLOR(11, 0, 78));
 
 ##############################################

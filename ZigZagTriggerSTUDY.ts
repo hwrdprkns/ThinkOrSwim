@@ -110,8 +110,16 @@ if lowPoint and offset > 1 {
 } else {
     lastL = Double.NaN;
 }
-DEF SHARES = ROUND(10000 / CLOSE);
 
-#LONG POSITION:
-ADDORDER(ORDERTYPE.BUY_TO_OPEN, lastL == priceL, TRADESIZE = SHARES, TICKCOLOR = CreateColor(0, 255, 0), ARROWCOLOR = CreateColor(0, 255, 0), NAME = "ZZ_LE");
-addOrder(OrderType.SELL_TO_CLOSE, lastH == priceH, TRADESIZE = SHARES, tickColor = CreateColor(255, 0, 0), arrowColor = CreateColor(255, 0, 0), NAME = "ZZ_LX");
+def SHARES = Round(10000 / close);
+
+def ENTRY = lastL == priceL;
+def EXIT = lastH == priceH;
+
+PLOT BELOW = ENTRY;
+PLOT ABOVE = EXIT;
+
+ABOVE.SetDefaultColor(CreateColor(255, 0, 0));
+ABOVE.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+BELOW.SetDefaultColor(CreateColor(0, 255, 0));
+BELOW.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);

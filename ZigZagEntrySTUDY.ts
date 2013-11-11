@@ -1,8 +1,8 @@
 input priceH = close;
 input priceL = close;
-input percentageReversal = 1.0;
-input absoluteReversal = 0.0;
-input atrLength = 5.0;
+input percentageReversal = 0;
+input absoluteReversal = 1;
+input atrLength = 5; 
 input atrReversal = 1.5;
 input off = 1;
 
@@ -112,9 +112,10 @@ if lowPoint and offset > 1 {
     lastL = Double.NaN;
 }
 
+def SHARES = Round(10000 / close);
 def ENTRY = lastL[off] == priceL[off] and rsiWilder()[off] < 50;
 
-DEF SHARES = ROUND(10000 / CLOSE);
+PLOT BELOW = ENTRY;
 
-#LONG POSITION:
-ADDORDER(ORDERTYPE.BUY_TO_OPEN, ENTRY is true, TRADESIZE = SHARES, TICKCOLOR = GETCOLOR(0), ARROWCOLOR = GETCOLOR(0), NAME = "ZZ_LE");
+BELOW.SetDefaultColor(CreateColor(0, 255, 0));
+BELOW.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);

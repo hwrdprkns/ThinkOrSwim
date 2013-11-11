@@ -3,7 +3,7 @@ input priceL = close;
 input percentageReversal = 1.0;
 input absoluteReversal = 0.0;
 input atrLength = 5.0;
-input atrReversal = 1.5;
+input atrReversal = 0.5;
 input off = 1;
 
 Assert(percentageReversal >= 0, "'percentage reversal' must not be negative: " + percentageReversal);
@@ -112,9 +112,10 @@ if lowPoint and offset > 1 {
     lastL = Double.NaN;
 }
 
-def ENTRY = lastL[off] == priceL[off] and rsiWilder()[off] < 50;
+def SHARES = Round(10000 / close);
+DEF EXIT = lastH[off] == priceH[off];
 
-DEF SHARES = ROUND(10000 / CLOSE);
+PLOT ABOVE = EXIT;
 
-#LONG POSITION:
-ADDORDER(ORDERTYPE.BUY_TO_OPEN, ENTRY is true, TRADESIZE = SHARES, TICKCOLOR = GETCOLOR(0), ARROWCOLOR = GETCOLOR(0), NAME = "ZZ_LE");
+ABOVE.SetDefaultColor(CreateColor(255, 0, 0));
+ABOVE.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);

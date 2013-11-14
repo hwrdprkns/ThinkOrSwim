@@ -112,9 +112,7 @@ if lowPoint and offset > 1 {
     lastL = Double.NaN;
 }
 
-def ENTRY = lastL[off] == priceL[off] and rsiWilder()[off] < 50;
-
 DEF SHARES = ROUND(10000 / CLOSE);
 
 #LONG POSITION:
-ADDORDER(ORDERTYPE.BUY_TO_OPEN, ENTRY is true, TRADESIZE = SHARES, TICKCOLOR = GETCOLOR(0), ARROWCOLOR = GETCOLOR(0), NAME = "ZZ_LE");
+ADDORDER(ORDERTYPE.BUY_TO_OPEN, lastL[off] == priceL[off], TRADESIZE = SHARES, TICKCOLOR = GETCOLOR(0), ARROWCOLOR = GETCOLOR(0), NAME = "ZZ_LE");

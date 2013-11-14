@@ -1,7 +1,7 @@
 input priceH = close;
 input priceL = close;
-input percentageReversal = 0;
-input absoluteReversal = 1;
+input percentageReversal = 1.0;
+input absoluteReversal = 0.0;
 input atrLength = 5; 
 input atrReversal = 1.5;
 input off = 1;
@@ -112,8 +112,7 @@ if lowPoint and offset > 1 {
     lastL = Double.NaN;
 }
 
-def SHARES = Round(10000 / close);
-def ENTRY = lastL[off] == priceL[off] and rsiWilder()[off] < 50;
+DEF ENTRY = lastL[off] == priceL[off] and rsiWilder()[off] < 50;
 
 PLOT BELOW = ENTRY;
 

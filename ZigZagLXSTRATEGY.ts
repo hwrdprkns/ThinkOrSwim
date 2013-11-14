@@ -112,7 +112,7 @@ if lowPoint and offset > 1 {
     lastL = Double.NaN;
 }
 
-def EXIT = lastH[off] == priceH[off];
+DEF EXIT = lastH[off] == priceH[off];
 
 DEF SHARES = ROUND(10000 / CLOSE);
 

@@ -112,7 +112,7 @@ if lowPoint and offset > 1 {
     lastL = Double.NaN;
 }
 
-def SHARES = Round(10000 / close);
+DEF SHARES = Round(10000 / close);
 DEF EXIT = lastH[off] == priceH[off];
 
 PLOT ABOVE = EXIT;

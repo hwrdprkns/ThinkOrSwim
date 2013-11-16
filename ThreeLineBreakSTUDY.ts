@@ -1,11 +1,8 @@
-#  SJ_ThreeLineBreak
-#  Original Code by Richard Houser
-declare upper;
-# Clear Chart
-# Turn off volume on upper chart: Style > Settings > Equities > Show Volume (empty checkbox)
-AssignPriceColor(CreateColor(10, 0, 78));
-AssignBackgroundColor(CreateColor(10, 0, 78));
- 
+#hint: <b>Three-Line Break</b>
+# code by rhouser@...
+
+declare lower;
+
 rec state = {default barOne, barTwo, barThree};
 rec xHigh;
 rec xLow;
@@ -47,15 +44,18 @@ switch ( state[1] ) {
       xWhite = xWhite[1];
     }
 }
-DefineGlobalColor( "3LBH", Color.YELLOW );
-DefineGlobalColor( "3LBL", Color.CYAN );
+
+DefineGlobalColor( "white", Color.WHITE );
+DefineGlobalColor( "black", Color.RED );
 plot TLB_High  = if IsNaN(close) then Double.NaN else if xWhite then xHigh else xLow;
 TLB_High.SetPaintingStrategy( PaintingStrategy.DASHES );
-TLB_High.AssignValueColor( if xWhite then globalColor("3LBH") else globalColor("3LBL"));
+TLB_High.AssignValueColor( if xWhite then globalColor("white") else globalColor("black"));
 plot TLB_Low = if IsNaN(close) then Double.NaN else if xWhite then xLow else xHigh;
 TLB_Low.SetPaintingStrategy( PaintingStrategy.DASHES );
-TLB_Low.AssignValueColor( if xWhite then globalColor("3LBH") else globalColor("3LBL"));
-AddCloud( TLB_High, TLB_Low, Color.UPTICK, Color.DOWNTICK );
+TLB_Low.AssignValueColor( if xWhite then globalColor("white") else globalColor("black"));
+
+#AddCloud( TLB_High, TLB_Low, globalColor("white"), globalColor("black") );
+
 plot P = close;
 P.SetPaintingStrategy( PaintingStrategy.POINTS );
 P.Hide();

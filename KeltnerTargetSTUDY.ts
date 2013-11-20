@@ -5,7 +5,7 @@
 declare weak_volume_dependency;
 
 input displace = 0;
-input factor = 2.5;
+input factor = 2.0;
 input length = 20;
 input price = close;
 input AverageType = {default SMA, EMA};

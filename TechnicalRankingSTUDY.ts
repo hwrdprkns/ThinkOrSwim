@@ -1,35 +1,45 @@
 # TECHNICALRANKING
 # WGRIFFITH2 (C) 2013
 
-DEF STO = 100 - ROUND(SIMPLEMOVINGAVG(100 * ((CLOSE - LOWEST(LOW, 14)) / (HIGHEST(HIGH, 14) - LOWEST(LOW, 14))), LENGTH = 3));
+#MODELED AFTER THE TECHNICAL RANKING FROM STOCKCHARTS, THOUGH I HAVE CHANGE THE WEIGHTS
+#HTTP://STOCKCHARTS.COM/SCHOOL/DOKU.PHP?ID=CHART_SCHOOL:TECHNICAL_INDICATORS:SCTR
+#LONG-TERM INDICATORS (WEIGHTING)
+#  * PERCENT ABOVE/BELOW 200-DAY EMA (30%)
+#  * 125-DAY RATE-OF-CHANGE (30%)
+#
+#MEDIUM-TERM INDICATORS (WEIGHTING)
+#  * PERCENT ABOVE/BELOW 50-DAY EMA  (15%)
+#  * 20-DAY RATE-OF-CHANGE (15%)
+#
+#SHORT-TERM INDICATORS (WEIGHTING)
+#  * 3-DAY SLOPE OF PPO-HISTOGRAM (5%)
+#  * 14-DAY RSI (5%)
 
-DEF RSI = 100 - RSIWILDER();
+# REQ: LONG+MED+SHORT = .50 OR (.50*2)=1
 
-DEF PVR = if close > close[1] then 
-              if volume > volume[1] then 
-                 100
-              else 
-                 if volume < volume[1] then 
-                    50
-                 else 
-                    0 
-           else 
-              0 + if close < close[1] then 
-              if volume < volume[1] then 
-                 0 
-              else 
-                 if volume > volume[1] then 
-                    0 
-                 else 
-                    0 
-           else 
-              0
-;
+INPUT PRICE = CLOSE;
+INPUT LONG = 30; 
+INPUT MED = 10;
+INPUT SHORT = 10;
 
-DEF ADX = ADX(7);
+DEF LTMA = MOVAVGEXPONENTIAL(LENGTH = 200, PRICE = PRICE);
+DEF LTPR = ((PRICE-LTMA)/LTMA)*LONG;
+DEF LTRC = (RATEOFCHANGE(LENGTH = 125, PRICE = PRICE)/100)*LONG;
+DEF LTOUT = LTPR+LTRC;
 
-DEF TOT = STO+RSI+PVR+ADX;
+DEF MTMA = MOVAVGEXPONENTIAL(LENGTH = 50, PRICE = PRICE);
+DEF MTPR = ((PRICE-MTMA)/MTMA)*MED;
+DEF MTRC = (RATEOFCHANGE(LENGTH = 20, PRICE = PRICE)/100)*MED;
+DEF MTOUT = MTPR+MTRC;
 
-PLOT TOTAL = TOT;
+DEF MACD = MACDHistogram("fast length" = 5, "slow length" = 35, "macd length" = 5);
+DEF SLOPE = (LinearRegressionSlope(price = MACD, length = 3))*SHORT;
+DEF RSI = (RSIWilder()/100)*SHORT;
+DEF STOUT = SLOPE+RSI;
 
-#########################################
+DEF TOTAL = LTOUT+MTOUT+STOUT;
+#PLOT OUT = TOTAL;
+
+# plot all for testing purposes
+PLOT LT = LTOUT; PLOT MT = MTOUT; PLOT ST = STOUT; PLOT OUT = TOTAL;
+##########################################################

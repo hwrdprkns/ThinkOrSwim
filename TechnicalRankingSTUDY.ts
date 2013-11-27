@@ -25,10 +25,6 @@ DEF FASTLINE = ROUND(SIMPLEMOVINGAVG(100 * ((CLOSE - LOWEST(LOW, KPERIOD)) / (HI
 def sto_max = highestAll(FASTLINE)[200];
 def invSto = -((fastline-sto_max)/sto_max)*.1;
 
-DEF CMF = chaikinMoneyFlow();
-def CMF_max = highestAll(CMF)[200];
-DEF invCMF = -((CMF-CMF_max)/CMF_max)*.1;
-
-PLOT TOTAL = LTEMA+invRSI+invMACD+invSto+invCMF;
+PLOT TOTAL = LTEMA+invRSI+invMACD+invSto;
 
 ##########################################################

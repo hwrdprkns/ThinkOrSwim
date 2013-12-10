@@ -1,26 +1,26 @@
-# RSITrend
+# SwingTrend
 # WGRIFFITH2 (c) 2013
 
-input paintBars = yes;
+input price = close;
 input length = 14;
 input sma_length = 12;
-input over_bought = 70;
-input over_sold = 30;
-input price = close;
-input rsiChoice = {default "RSI Wilder", "RSI EMA"};
+input paintBars = yes;
 
-def rsi;
-switch (rsiChoice) {
-case "RSI EMA":
-    rsi = reference RSI_EMA(price = price, length = length);
-case "RSI Wilder":
-    rsi = reference RSIWilder(price = price, length = length);
-}
+# STOCHASTICSLOW
+DEF KPERIOD = 14;
+DEF DPERIOD = 3;
+DEF FASTLINE = ROUND(SIMPLEMOVINGAVG(100 * ((CLOSE - LOWEST(LOW, KPERIOD)) / (HIGHEST(HIGH, KPERIOD) - LOWEST(LOW, KPERIOD))), LENGTH = DPERIOD));
+DEF SLOWLINE = ROUND(SIMPLEMOVINGAVG(SIMPLEMOVINGAVG(100*((CLOSE-LOWEST(LOW,KPERIOD))/(HIGHEST(HIGH,KPERIOD)-LOWEST(LOW,KPERIOD))), LENGTH = DPERIOD), LENGTH = DPERIOD));
 
+# RSI
+def rsi = reference RSIWilder(price = price, length = length);
 def SMA = SimpleMovingAvg(price = rsi, length = sma_length);
 
-def GreenPrice = RSI > SMA;
-def RedPrice = RSI < SMA;
+# MACD
+DEF MACD = MACDHistogram("fast length" = 5, "slow length" = 35, "macd length" = 5);
+
+def GreenPrice = RSI > SMA AND MACD > 0 and FASTLINE > SLOWLINE;
+def RedPrice = RSI < SMA AND MACD < 0 and FASTLINE < SLOWLINE;
 
 plot Bullish = GreenPrice;
 plot Neutral = !GreenPrice and !RedPrice;

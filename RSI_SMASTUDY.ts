@@ -1,31 +1,31 @@
 # RSI_SMA
-# wgriffith2 (c) 2013
+# WGRIFFITH2 (C) 2013
 #
 
-declare lower;
+DECLARE LOWER;
 
-input length = 14;
-input over_Bought = 70;
-input over_Sold = 30;
-input price = close;
-input sma_length = 12;
+INPUT LENGTH = 14;
+INPUT OVER_BOUGHT = 70;
+INPUT OVER_SOLD = 30;
+INPUT PRICE = CLOSE;
+INPUT SMA_LENGTH = 12;
 
-def NetChgAvg = WildersAverage(price - price[1], length);
-def TotChgAvg = WildersAverage(AbsValue(price - price[1]), length);
-def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
+DEF NETCHGAVG = WILDERSAVERAGE(PRICE - PRICE[1], LENGTH);
+DEF TOTCHGAVG = WILDERSAVERAGE(ABSVALUE(PRICE - PRICE[1]), LENGTH);
+DEF CHGRATIO = IF TOTCHGAVG != 0 THEN NETCHGAVG / TOTCHGAVG ELSE 0;
 
-def RSI_OUT = 50 * (ChgRatio + 1);
-def SMA = SimpleMovingAvg(price = RSI_OUT, length = sma_length);
+DEF RSI_OUT = 50 * (CHGRATIO + 1);
+DEF SMA = SIMPLEMOVINGAVG(PRICE = RSI_OUT, LENGTH = SMA_LENGTH);
 
-plot RSI = RSI_OUT;
-plot RSI_SMA = SMA;
-plot OverSold = over_Sold;
-plot OverBought = over_Bought;
+PLOT RSI = RSI_OUT;
+PLOT RSI_SMA = SMA;
+PLOT OVERSOLD = OVER_SOLD;
+PLOT OVERBOUGHT = OVER_BOUGHT;
 
-RSI.DefineColor("OverBought", GetColor(5));
-RSI.DefineColor("Normal", GetColor(7));
-RSI.DefineColor("OverSold", GetColor(1));
-RSI.AssignValueColor(if RSI > over_Bought then RSI.color("OverBought") else if RSI < over_Sold then RSI.color("OverSold") else RSI.color("Normal"));
-RSI_SMA.SetDefaultColor(GetColor(1));
-OverSold.SetDefaultColor(GetColor(8));
-OverBought.SetDefaultColor(GetColor(8));
+RSI.DEFINECOLOR("OVERBOUGHT", GETCOLOR(5));
+RSI.DEFINECOLOR("NORMAL", GETCOLOR(7));
+RSI.DEFINECOLOR("OVERSOLD", GETCOLOR(1));
+RSI.ASSIGNVALUECOLOR(IF RSI > OVER_BOUGHT THEN RSI.COLOR("OVERBOUGHT") ELSE IF RSI < OVER_SOLD THEN RSI.COLOR("OVERSOLD") ELSE RSI.COLOR("NORMAL"));
+RSI_SMA.SETDEFAULTCOLOR(GETCOLOR(1));
+OVERSOLD.SETDEFAULTCOLOR(GETCOLOR(8));
+OVERBOUGHT.SETDEFAULTCOLOR(GETCOLOR(8));

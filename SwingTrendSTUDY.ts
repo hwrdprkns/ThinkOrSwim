@@ -7,20 +7,16 @@ input sma_length = 12;
 input paintBars = yes;
 
 # STOCHASTICSLOW
-DEF KPERIOD = 14;
-DEF DPERIOD = 3;
-DEF FASTLINE = ROUND(SIMPLEMOVINGAVG(100 * ((CLOSE - LOWEST(LOW, KPERIOD)) / (HIGHEST(HIGH, KPERIOD) - LOWEST(LOW, KPERIOD))), LENGTH = DPERIOD));
-DEF SLOWLINE = ROUND(SIMPLEMOVINGAVG(SIMPLEMOVINGAVG(100*((CLOSE-LOWEST(LOW,KPERIOD))/(HIGHEST(HIGH,KPERIOD)-LOWEST(LOW,KPERIOD))), LENGTH = DPERIOD), LENGTH = DPERIOD));
-
-# RSI
-def rsi = reference RSIWilder(price = price, length = length);
-def SMA = SimpleMovingAvg(price = rsi, length = sma_length);
+def KPERIOD = 14;
+def DPERIOD = 3;
+def FASTLINE = Round(SimpleMovingAvg(100 * ((close - Lowest(low, KPERIOD)) / (Highest(high, KPERIOD) - Lowest(low, KPERIOD))), LENGTH = DPERIOD));
+def SLOWLINE = Round(SimpleMovingAvg(SimpleMovingAvg(100 * ((close - Lowest(low, KPERIOD)) / (Highest(high, KPERIOD) - Lowest(low, KPERIOD))), LENGTH = DPERIOD), LENGTH = DPERIOD));
 
 # MACD
-DEF MACD = MACDHistogram("fast length" = 5, "slow length" = 35, "macd length" = 5);
+def MACD = MACDHistogram("fast length" = 5, "slow length" = 35, "macd length" = 5);
 
-def GreenPrice = RSI > SMA AND MACD > 0 and FASTLINE > SLOWLINE;
-def RedPrice = RSI < SMA AND MACD < 0 and FASTLINE < SLOWLINE;
+def GreenPrice = MACD >= 0 and FASTLINE >= SLOWLINE;
+def RedPrice = MACD < 0 and FASTLINE < SLOWLINE;
 
 plot Bullish = GreenPrice;
 plot Neutral = !GreenPrice and !RedPrice;
@@ -29,19 +25,19 @@ plot Bearish = RedPrice;
 Bullish.SetDefaultColor(Color.UPTICK);
 Bullish.SetPaintingStrategy(PaintingStrategy.BOOLEAN_POINTS);
 Bullish.SetLineWeight(3);
-Bullish.hide();
+Bullish.Hide();
 Neutral.SetDefaultColor(Color.BLUE);
 Neutral.SetPaintingStrategy(PaintingStrategy.BOOLEAN_POINTS);
 Neutral.SetLineWeight(3);
-Neutral.hide();
+Neutral.Hide();
 Bearish.SetDefaultColor(Color.DOWNTICK);
 Bearish.SetPaintingStrategy(PaintingStrategy.BOOLEAN_POINTS);
 Bearish.SetLineWeight(3);
-Bearish.hide();
+Bearish.Hide();
 
 DefineGlobalColor("Bullish", Color.UPTICK);
 DefineGlobalColor("Neutral", Color.BLUE);
 DefineGlobalColor("Bearish", Color.DOWNTICK);
-AssignPriceColor(if !paintBars then Color.CURRENT else if GreenPrice then globalColor("Bullish") else if RedPrice then globalColor("Bearish") else globalColor("Neutral"));
+AssignPriceColor(if !paintBars then Color.CURRENT else if GreenPrice then GlobalColor("Bullish") else if RedPrice then GlobalColor("Bearish") else GlobalColor("Neutral"));
 
 #############################################################

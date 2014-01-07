@@ -1,10 +1,7 @@
-# SwingTrend
-# WGRIFFITH2 (c) 2013
+# SWINGTREND
+# WGRIFFITH2 (C) 2013
 
-input price = close;
-input length = 14;
-input sma_length = 12;
-input paintBars = yes;
+def PAINTBARS = yes;
 
 # STOCHASTICSLOW
 def KPERIOD = 14;
@@ -13,31 +10,34 @@ def FASTLINE = Round(SimpleMovingAvg(100 * ((close - Lowest(low, KPERIOD)) / (Hi
 def SLOWLINE = Round(SimpleMovingAvg(SimpleMovingAvg(100 * ((close - Lowest(low, KPERIOD)) / (Highest(high, KPERIOD) - Lowest(low, KPERIOD))), LENGTH = DPERIOD), LENGTH = DPERIOD));
 
 # MACD
-def MACD = MACDHistogram("fast length" = 5, "slow length" = 35, "macd length" = 5);
+def MACD = MACDHistogram("FAST LENGTH" = 5, "SLOW LENGTH" = 35, "MACD LENGTH" = 5);
 
-def GreenPrice = MACD >= 0 and FASTLINE >= SLOWLINE;
-def RedPrice = MACD < 0 and FASTLINE < SLOWLINE;
+def RSI = RSIWilder(PRICE = CLOSE, LENGTH = 14);
+def SMA = SimpleMovingAvg(PRICE = RSI, LENGTH = 12);
 
-plot Bullish = GreenPrice;
-plot Neutral = !GreenPrice and !RedPrice;
-plot Bearish = RedPrice;
+def GREENPRICE = RSI >= SMA and MACD >= 0 and FASTLINE >= SLOWLINE;
+def REDPRICE = RSI < SMA and MACD < 0 and FASTLINE < SLOWLINE;
 
-Bullish.SetDefaultColor(Color.UPTICK);
-Bullish.SetPaintingStrategy(PaintingStrategy.BOOLEAN_POINTS);
-Bullish.SetLineWeight(3);
-Bullish.Hide();
-Neutral.SetDefaultColor(Color.BLUE);
-Neutral.SetPaintingStrategy(PaintingStrategy.BOOLEAN_POINTS);
-Neutral.SetLineWeight(3);
-Neutral.Hide();
-Bearish.SetDefaultColor(Color.DOWNTICK);
-Bearish.SetPaintingStrategy(PaintingStrategy.BOOLEAN_POINTS);
-Bearish.SetLineWeight(3);
-Bearish.Hide();
+plot BULLISH = GREENPRICE;
+plot NEUTRAL = !GREENPRICE and !REDPRICE;
+plot BEARISH = REDPRICE;
 
-DefineGlobalColor("Bullish", Color.UPTICK);
-DefineGlobalColor("Neutral", Color.BLUE);
-DefineGlobalColor("Bearish", Color.DOWNTICK);
-AssignPriceColor(if !paintBars then Color.CURRENT else if GreenPrice then GlobalColor("Bullish") else if RedPrice then GlobalColor("Bearish") else GlobalColor("Neutral"));
+BULLISH.SetDefaultColor(Color.UPTICK);
+BULLISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_POINTS);
+BULLISH.SetLineWeight(3);
+BULLISH.Hide();
+NEUTRAL.SetDefaultColor(Color.BLUE);
+NEUTRAL.SetPaintingStrategy(PaintingStrategy.BOOLEAN_POINTS);
+NEUTRAL.SetLineWeight(3);
+NEUTRAL.Hide();
+BEARISH.SetDefaultColor(Color.DOWNTICK);
+BEARISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_POINTS);
+BEARISH.SetLineWeight(3);
+BEARISH.Hide();
+
+DefineGlobalColor("BULLISH", Color.UPTICK);
+DefineGlobalColor("NEUTRAL", Color.BLUE);
+DefineGlobalColor("BEARISH", Color.DOWNTICK);
+AssignPriceColor(if !PAINTBARS then Color.CURRENT else if GREENPRICE then GlobalColor("BULLISH") else if REDPRICE then GlobalColor("BEARISH") else GlobalColor("NEUTRAL"));
 
 #############################################################

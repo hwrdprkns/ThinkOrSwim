@@ -12,11 +12,15 @@ def SLOWLINE = Round(SimpleMovingAvg(SimpleMovingAvg(100 * ((close - Lowest(low,
 # MACD
 def MACD = MACDHistogram("FAST LENGTH" = 5, "SLOW LENGTH" = 35, "MACD LENGTH" = 5);
 
-def RSI = RSIWilder(PRICE = CLOSE, LENGTH = 14);
-def SMA = SimpleMovingAvg(PRICE = RSI, LENGTH = 12);
+#def RSI = RSIWilder(PRICE = CLOSE, LENGTH = 14);
+#def SMA = SimpleMovingAvg(PRICE = RSI, LENGTH = 12);
 
-def GREENPRICE = RSI >= SMA and MACD >= 0 and FASTLINE >= SLOWLINE;
-def REDPRICE = RSI < SMA and MACD < 0 and FASTLINE < SLOWLINE;
+def GREENPRICE = #RSI >= SMA and 
+MACD >= 0 and 
+FASTLINE >= SLOWLINE;
+def REDPRICE = #RSI < SMA and
+MACD < 0 and
+FASTLINE < SLOWLINE;
 
 plot BULLISH = GREENPRICE;
 plot NEUTRAL = !GREENPRICE and !REDPRICE;

@@ -23,48 +23,44 @@ MACD < 0 and
 FASTLINE < SLOWLINE;
 
 plot BULLISH =
-#BIG MOVE GREEN
+# BIG MOVE GREEN
 if GREENPRICE
 and Lowest(FASTLINE, 3) < 20
 and close > SimpleMovingAvg()
 and close > close[1]
 then 1
-#SMALL MOVE GREEN
-else if GREENPRICE
-and Lowest(FASTLINE, 3) < 20
-and close > close[1]
-then .9
 # TRENDING GREEN
+else if GREENPRICE
+and close > SimpleMovingAvg()
+then .9
+# SMALL MOVE GREEN
 ELSE if GREENPRICE
-and close > close[1]
 then .8
-#BIG MOVE BLUE
+# BIG MOVE BLUE
 else if !GREENPRICE
 and !REDPRICE
 and Lowest(FASTLINE, 3) < 20
 and close > SimpleMovingAvg()
-and close > close[1] 
+and close > close[1]
 then .7
-#SMALL MOVE BLUE
+# TRENDING BLUE
 else if !GREENPRICE
 and !REDPRICE
-and Lowest(FASTLINE, 3) < 20
-and close > close[1]
+and close > SimpleMovingAvg()
 then .6
-# TRENDING BLUE
+# SMALL MOVE BLUE
 ELSE if !GREENPRICE
 and !REDPRICE
-and close > close[1]
 then .5
 # UNCONFIRMED RED
 ELSE if !GREENPRICE
 and close > close[1]
 and Lowest(FASTLINE, 3) < 20
 then .25
-# CONFLICTING RED
+# OVERSOLD RED
 ELSE if !GREENPRICE
-and close > close[1]
-then .15
+and Lowest(FASTLINE, 3) < 20
+then .10
 else 0;
 
 BULLISH.SetDefaultColor(CreateColor(0, 255, 0));

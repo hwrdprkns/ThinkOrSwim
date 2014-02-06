@@ -27,29 +27,27 @@ def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 def RSI = 50 * (ChgRatio + 1);
 
-# 12M
-def rsi_low252 = 
+def rsi_low1 = 
 round(LOWEST(RSI,LENGTH=len1), numberOfDigits = 0);
-def rsi_high252 = 
+def rsi_high1 = 
 round(HIGHEST(RSI,LENGTH=len1), numberOfDigits = 0);
 
-# 3M
-def rsi_low63 = 
+def rsi_low2 = 
 round(LOWEST(RSI,LENGTH=len2), numberOfDigits = 0);
-def rsi_high63 = 
+def rsi_high2 = 
 round(HIGHEST(RSI,LENGTH=len2), numberOfDigits = 0);
 
 plot BULLISH = !REDPRICE
-AND CLOSE > OHLC4[1]
-AND RSI < 60
-AND (RSI[1] - rsi_low252[1] <= 2
-OR RSI[1] - rsi_low63[1] <= 2);
+and close > OHLC4[1]
+AND RSI < 50
+and (RSI[1] - rsi_low1[1] <= 2
+and RSI[1] - rsi_low2[1] <= 2);
 
 plot BEARISH = !GREENPRICE
-AND CLOSE < OHLC4[1]
+and close < OHLC4[1]
 AND RSI > 70
-AND (rsi_high252[1] - RSI[1] <= 1
-OR rsi_high63[1] - RSI[1] <= 1);
+and (rsi_high1[1] - RSI[1] <= 2
+and rsi_high2[1] - RSI[1] <= 2);
 
 BULLISH.SetDefaultColor(CreateColor(0, 255, 0));
 BULLISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);

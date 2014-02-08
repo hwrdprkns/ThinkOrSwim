@@ -4,6 +4,7 @@
 declare upper;
 
 input UpperLength = 42;
+input LowerLength = 42;
 
 def NetChgAvg = WildersAverage(close - close[1], 14);
 def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
@@ -17,6 +18,13 @@ def UpperCoeff = rsiValueUpper / (100 - rsiValueUpper);
 def UpperDiff =  (14 - 1) * (WildersAverage(Max(-chg, 0), 14) * UpperCoeff - WildersAverage(Max(chg, 0), 14));
 def UpperValue = close + if UpperDiff >= 0 then UpperDiff else UpperDiff / UpperCoeff;
 
-plot UpperRevEngRSI = compoundValue(1, UpperValue[1], Double.NaN);
+# RSI Support
+def rsiValueLower = round(Lowest(RSI,LENGTH=LowerLength), numberOfDigits = 0);
+def LowerCoeff = rsiValueLower / (100 - rsiValueLower);
+def LowerDiff =  (14 - 1) * (WildersAverage(Max(-chg, 0), 14) * LowerCoeff - WildersAverage(Max(chg, 0), 14));
+def LowerValue = close + if LowerDiff >= 0 then LowerDiff else LowerDiff / LowerCoeff;
 
+plot UpperRevEngRSI = compoundValue(1, UpperValue[1], Double.NaN);
 UpperRevEngRSI.SETDEFAULTCOLOR(CREATECOLOR(11, 0, 78));
+plot LowerRevEngRSI = compoundValue(1, LowerValue[1], Double.NaN);
+LowerRevEngRSI.SETDEFAULTCOLOR(CREATECOLOR(11, 0, 78));

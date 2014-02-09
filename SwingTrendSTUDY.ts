@@ -1,5 +1,5 @@
 # SwingTrend
-# WGRIFFITH2 (c) 2013
+# WGRIFFITH2 (c) 2014
 
 input price = close;
 input length = 14;

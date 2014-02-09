@@ -4,7 +4,7 @@
 declare lower;
 
 input len1 = 252;
-input len2 = 63;
+input len2 = 42;
 
 # RSI
 def NetChgAvg = WildersAverage(close - close[1], 14);

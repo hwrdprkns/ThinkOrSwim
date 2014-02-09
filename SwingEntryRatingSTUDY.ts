@@ -33,20 +33,36 @@ plot RATING =
 
 #GAPPINGBULL
 if
-!REDPRICE
+!RedPrice
 and open > high[1]
-and close > close[1]
-and rsi < 60
+and close > high[1]
+and RSI < 60
 and rsi_high1 - RSI > 5
+then 2
+
+#CONFIRMEDBULL
+else if 
+!RedPrice
+and close > close[1]
+and close > open[1]
+and RSI[1] - rsi_low1[1] <= 1
 then 1
 
-# GAPPINGBEAR
+#GAPPINGBEAR
 else if
-!GREENPRICE
+!GreenPrice
 and open < low[1]
-and close < close[1]
-and rsi > 40
+and close < low[1]
+and RSI > 40
 and RSI - rsi_low1 > 5
+then -2
+
+#CONFIRMEDBEAR
+else if
+!GreenPrice
+and close < close[1]
+and close < open[1]
+and rsi_high1[1] - RSI[1] <= 1
 then -1
 
 else 0;

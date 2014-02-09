@@ -28,20 +28,36 @@ def rsi_high1 =
 Round(Highest(RSI, LENGTH = len1), numberOfDigits = 0);
 
 plot GAPPINGBULL =
-!REDPRICE
+!RedPrice
 and open > high[1]
-and close > close[1]
-and rsi < 60
+and close > high[1]
+and RSI < 60
 and rsi_high1 - RSI > 5;
 
+plot CONFIRMEDBULL =
+!RedPrice
+and close > close[1]
+and close > open[1]
+and RSI[1] - rsi_low1[1] <= 1;
+
 plot GAPPINGBEAR =
-!GREENPRICE
+!GreenPrice
 and open < low[1]
-and close < close[1]
-and rsi > 40
+and close < low[1]
+and RSI > 40
 and RSI - rsi_low1 > 5;
+
+plot CONFIRMEDBEAR =
+!GreenPrice
+and close < close[1]
+and close < open[1]
+and rsi_high1[1] - RSI[1] <= 1;
 
 GAPPINGBULL.SetDefaultColor(CreateColor(0, 255, 0));
 GAPPINGBULL.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+CONFIRMEDBULL.SetDefaultColor(CreateColor(128, 128, 128));
+CONFIRMEDBULL.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
 GAPPINGBEAR.SetDefaultColor(CreateColor(255, 0, 0));
 GAPPINGBEAR.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+CONFIRMEDBEAR.SetDefaultColor(CreateColor(128, 128, 128));
+CONFIRMEDBEAR.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);

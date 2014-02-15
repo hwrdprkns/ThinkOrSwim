@@ -10,7 +10,6 @@ input len2 = 21;
 def NetChgAvg = WildersAverage(close - close[1], 14);
 def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
-
 def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
 
 def rsi_low1 = 

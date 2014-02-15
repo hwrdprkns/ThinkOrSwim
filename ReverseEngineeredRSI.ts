@@ -3,8 +3,8 @@
 
 declare upper;
 
-input UpperLength = 42;
-input LowerLength = 42;
+input UpperLength = 21;
+input LowerLength = 21;
 
 def NetChgAvg = WildersAverage(close - close[1], 14);
 def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);

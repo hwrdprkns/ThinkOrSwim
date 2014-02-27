@@ -23,7 +23,7 @@ def GREENPRICE = MACD >= 0 and FASTLINE >= SLOWLINE;
 def REDPRICE = MACD < 0 and FASTLINE < SLOWLINE;
 
 # HEAVY VOLUME
-def HEAVY = VolumeAvg(LENGTH = 63) > VolumeAvg(LENGTH = 63).VOLAVG;
+def RelativeVolume = VolumeAvg(LENGTH = 60) / VolumeAvg(LENGTH = 60).VOLAVG;
 
 # SMA TEST
 def SMA200 = close > SimpleMovingAvg(LENGTH = 200);
@@ -31,19 +31,19 @@ def SMA20 = close > SimpleMovingAvg(LENGTH = 20);
 
 plot BULL =
 !REDPRICE
-and HEAVY
-and RSI[1] < 50
-and SMA200
-and !SMA20
+and ((SMA200 and !SMA20 and RSI[1] <= 50
+and RelativeVolume >= 1.0) # TL SUPPORT
+or (!SMA200 and !SMA20 and RSI[1] <= 50
+and RelativeVolume >= 1.25)) # OVERSOLD
 and close > OHLC4[1]
 and close > close[1];
 
 plot BEAR =
-!GREENPRICE
-and HEAVY
-and RSI[1] > 50
-and !SMA200
-and SMA20
+Redprice
+and ((!SMA200 and SMA20 and RSI[1] >= 50
+and RelativeVolume >= 1.25) # TL SUPPORT
+or (SMA200 and SMA20 and RSI[1] >= 50
+and RelativeVolume >= 1.5)) # OVERBOUGHT
 and close < OHLC4[1]
 and close < close[1];
 

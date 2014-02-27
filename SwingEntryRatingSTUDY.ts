@@ -33,8 +33,7 @@ plot RATING =
 
 # BULL =
 if
-!REDPRICE
-and ((SMA200 and !SMA20 and RSI[1] <= 50
+((SMA200 and !SMA20 and RSI[1] <= 50
 and RelativeVolume >= 1.0) # TL SUPPORT
 or (!SMA200 and !SMA20 and RSI[1] <= 50
 and RelativeVolume >= 1.25)) # OVERSOLD
@@ -43,8 +42,7 @@ and close > close[1]
 then 1
 
 else if
-Redprice
-and ((!SMA200 and SMA20 and RSI[1] >= 50
+((!SMA200 and SMA20 and RSI[1] >= 50
 and RelativeVolume >= 1.25) # TL SUPPORT
 or (SMA200 and SMA20 and RSI[1] >= 50
 and RelativeVolume >= 1.5)) # OVERBOUGHT

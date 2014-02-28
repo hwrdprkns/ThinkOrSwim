@@ -1,16 +1,23 @@
 # SWINGENTRYRATING
 # WGRIFFITH2 (C) 2014
 
-input periods = 2;
+declare lower;
 
-declare upper;
+# STOCHASTICSLOW
+def KPERIOD = 14;
+def DPERIOD = 3;
+def FASTLINE = Round(SimpleMovingAvg(100 * ((close - Lowest(low, KPERIOD)) / (Highest(high, KPERIOD) - Lowest(low, KPERIOD))), LENGTH = DPERIOD));
+def SLOWLINE = Round(SimpleMovingAvg(SimpleMovingAvg(100 * ((close - Lowest(low, KPERIOD)) / (Highest(high, KPERIOD) - Lowest(low, KPERIOD))), LENGTH = DPERIOD), LENGTH = DPERIOD));
+
+# MACD
+def MACD = MACDHistogram("FAST LENGTH" = 5, "SLOW LENGTH" = 35, "MACD LENGTH" = 5);
+
+# OSCILLATOR TEST
+def GREENPRICE = MACD >= 0 and FASTLINE >= SLOWLINE;
+def REDPRICE = MACD < 0 and FASTLINE < SLOWLINE;
 
 # HEAVY VOLUME
 def RelativeVolume = VolumeAvg(LENGTH = 60) / VolumeAvg(LENGTH = 60).VOLAVG;
-
-# HIGHS / LOWS
-def ROLLINGLOW = Lowest(DATA = low(), LENGTH = periods)[1];
-def ROLLINGHIGH = Highest(DATA = high(), LENGTH = periods)[1];
 
 # SMA TEST
 def SMA200 = close > SimpleMovingAvg(LENGTH = 200);
@@ -19,17 +26,30 @@ def SMA20 = close > SimpleMovingAvg(LENGTH = 20);
 
 plot RATING =
 
-# BULL =
 if
-SMA200 and !SMA50 and !SMA20
+!Redprice
+and SMA200 and !SMA50 and !SMA20
 and RelativeVolume >= 1.0
-and close >= ROLLINGHIGH
+and close >= ohlc4[1]
 then 1
 
 else if
-!SMA200 and SMA50 and SMA20
+!Redprice
+and SMA200 and !SMA50 and !SMA20
+and close >= ohlc4[1]
+then .5
+
+else if
+!GreenPrice
+and SMA200 and SMA50 and SMA20
+and close <= ohlc4[1]
+then -.5
+
+else if
+!GreenPrice
+and SMA200 and SMA50 and SMA20
 and RelativeVolume >= 1.0
-and close <= ROLLINGLOW
+and close <= ohlc4[1]
 then -1
 
 else 0;

@@ -1,35 +1,32 @@
 # SWINGENTRY
 # WGRIFFITH2 (C) 2014
 
+input periods = 2;
+
 declare upper;
-# RSI
-def NETCHGAVG = WildersAverage(close - close[1], 14);
-def TOTCHGAVG = WildersAverage(AbsValue(close - close[1]), 14);
-def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
-def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
 # HEAVY VOLUME
 def RelativeVolume = VolumeAvg(LENGTH = 60) / VolumeAvg(LENGTH = 60).VOLAVG;
+
+# HIGHS / LOWS
+def ROLLINGLOW = Lowest(DATA = low(), LENGTH = periods)[1];
+def ROLLINGHIGH = Highest(DATA = high(), LENGTH = periods)[1];
 
 # SMA TEST
 def SMA200 = close > SimpleMovingAvg(LENGTH = 200);
 def SMA20 = close > SimpleMovingAvg(LENGTH = 20);
 
 plot BULL =
-((SMA200 and !SMA20 and RSI[1] <= 50
-and RelativeVolume >= 1.0) # TL SUPPORT
-or (!SMA200 and !SMA20 and RSI[1] <= 50
-and RelativeVolume >= 1.25)) # OVERSOLD
-and close > OHLC4[1]
-and close > close[1];
+SMA200
+AND !SMA20
+AND RelativeVolume >= 1.0
+and close >= ROLLINGHIGH;
 
 plot BEAR =
-((!SMA200 and SMA20 and RSI[1] >= 50
-and RelativeVolume >= 1.25) # TL SUPPORT
-or (SMA200 and SMA20 and RSI[1] >= 50
-and RelativeVolume >= 1.5)) # OVERBOUGHT
-and close < OHLC4[1]
-and close < close[1];
+!SMA200
+AND SMA20
+AND RelativeVolume >= 1.0
+and close <= ROLLINGLOW;
 
 BULL.SetDefaultColor(CreateColor(0, 255, 0));
 BULL.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);

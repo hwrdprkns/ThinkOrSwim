@@ -3,12 +3,13 @@
 
 declare lower;
 
+input len0 = 5;
 input len1 = 252;
 input len2 = 21;
 
 # RSI
-def NetChgAvg = WildersAverage(close - close[1], 14);
-def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
+def NetChgAvg = WildersAverage(close - close[1], len0);
+def TotChgAvg = WildersAverage(AbsValue(close - close[1]), len0);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
 

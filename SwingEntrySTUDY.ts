@@ -1,6 +1,10 @@
 # SWINGENTRY
 # WGRIFFITH2 (C) 2014
 
+input length = 5;
+input ob = 75;
+input os = 25;
+
 declare upper;
 
 # STOCHASTICSLOW
@@ -16,41 +20,42 @@ def MACD = MACDHistogram("FAST LENGTH" = 5, "SLOW LENGTH" = 35, "MACD LENGTH" = 
 def GREENPRICE = MACD >= 0 and FASTLINE >= SLOWLINE;
 def REDPRICE = MACD < 0 and FASTLINE < SLOWLINE;
 
+# RSI
+def NetChgAvg = WildersAverage(close - close[1], length);
+def TotChgAvg = WildersAverage(AbsValue(close - close[1]), length);
+def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
+def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
+
 # HEAVY VOLUME
 def RelativeVolume = VolumeAvg(LENGTH = 60) / VolumeAvg(LENGTH = 60).VOLAVG;
 
-# SMA TEST
-def SMA200 = close > SimpleMovingAvg(LENGTH = 200);
-def SMA50 = close > SimpleMovingAvg(LENGTH = 50);
-def SMA20 = close > SimpleMovingAvg(LENGTH = 20);
-
 plot BULL =
 !Redprice
-and SMA200 and !SMA50 and !SMA20
-and RelativeVolume >= 1.0
-and close >= ohlc4[1];
+and RSI[1] <= os
+and RSI > os
+and RelativeVolume >= 1.0;
 
 plot BULLLITE =
-!Redprice
-and SMA200 and !SMA50 and !SMA20
-and close >= ohlc4[1];
+!Redprice 
+and RSI[1] <= os
+and RSI > os;
 
 plot BEAR =
 !GreenPrice
-and !SMA200 and SMA50 and SMA20
-and RelativeVolume >= 1.0
-and close <= ohlc4[1];
+and RSI[1] >= ob
+and RSI < ob
+and RelativeVolume >= 1.0;
 
 plot BEARLITE =
 !GreenPrice
-and !SMA200 and SMA50 and SMA20
-and close <= ohlc4[1];
+and RSI[1] >= ob
+and RSI < ob;
 
 BULL.SetDefaultColor(CreateColor(0, 255, 0));
 BULL.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
-BULLLITE.SetDefaultColor(CreateColor(0, 255, 0));
+BULLLITE.SetDefaultColor(CreateColor(128, 128, 128));
 BULLLITE.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
 BEAR.SetDefaultColor(CreateColor(255, 0, 0));
 BEAR.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
-BEARLITE.SetDefaultColor(CreateColor(255, 0, 0));
+BEARLITE.SetDefaultColor(CreateColor(128, 128, 128));
 BEARLITE.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);

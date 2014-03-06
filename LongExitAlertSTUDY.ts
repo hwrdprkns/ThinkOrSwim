@@ -3,19 +3,17 @@
 
 # This is an alert that stocks is moving outside of normal trading range. Does not necessarily mean that it is a hard exit on either side but it is a signal to monitor much more closely.
 
-# Defaults are a 21 day RSI SR for a target, and a three day low/high for a stoploss. If the target is reached, then switch to a 180 day RSI SR, and a stoploss of a close below/above the previous day. Let profitable breakouts ride until there's a hint of it stalling out.
-
-input SRLEN = 21;
-input StopLossLEN = 2;
+input RSIlength = 5;
+input StopLossLEN = 3;
 input StopPrice = low;
 
 # RSI SUPPORT/RESISTANCE (SR)
-def NetChgAvg = WildersAverage(close - close[1], 14);
-def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
+def NetChgAvg = WildersAverage(close - close[1], RSIlength);
+def TotChgAvg = WildersAverage(AbsValue(close - close[1]), RSIlength);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
-def rsi_high2 = round(HIGHEST(RSI,LENGTH=SRLEN), numberOfDigits = 0);
-def Target = RSI == rsi_high2;
+
+def Target = RSI >= 75;
 
 # TRAILINGSTOP
 def STOP = close < Lowest(DATA = StopPrice, LENGTH = StopLossLEN)[1];

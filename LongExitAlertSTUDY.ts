@@ -7,7 +7,7 @@ input RSIlength = 5;
 input StopLossLEN = 3;
 input StopPrice = low;
 
-# RSI SUPPORT/RESISTANCE (SR)
+# RSI
 def NetChgAvg = WildersAverage(close - close[1], RSIlength);
 def TotChgAvg = WildersAverage(AbsValue(close - close[1]), RSIlength);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;

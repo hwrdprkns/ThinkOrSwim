@@ -1,11 +1,11 @@
 # SWINGENTRY
 # WGRIFFITH2 (C) 2014
 
+declare upper;
+
 input length = 5;
 input ob = 75;
 input os = 25;
-
-declare upper;
 
 # STOCHASTICSLOW
 def KPERIOD = 14;
@@ -26,36 +26,22 @@ def TotChgAvg = WildersAverage(AbsValue(close - close[1]), length);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
 
-# HEAVY VOLUME
-def RelativeVolume = VolumeAvg(LENGTH = 60) / VolumeAvg(LENGTH = 60).VOLAVG;
+# SMA TEST
+def SMA200 = close >= SimpleMovingAvg(LENGTH = 200);
+def SMA50 = close >= SimpleMovingAvg(LENGTH = 50);
+def SMA20 = close >= SimpleMovingAvg(LENGTH = 20);
 
 plot BULL =
-!Redprice
-and RSI[1] <= os
-and RSI > os
-and RelativeVolume >= 1.0;
-
-plot BULLLITE =
-!Redprice 
+SMA200 and !SMA50 and !SMA20
 and RSI[1] <= os
 and RSI > os;
 
 plot BEAR =
-!GreenPrice
-and RSI[1] >= ob
-and RSI < ob
-and RelativeVolume >= 1.0;
-
-plot BEARLITE =
-!GreenPrice
+!SMA200 and SMA50 and SMA20
 and RSI[1] >= ob
 and RSI < ob;
 
 BULL.SetDefaultColor(CreateColor(0, 255, 0));
 BULL.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
-BULLLITE.SetDefaultColor(CreateColor(128, 128, 128));
-BULLLITE.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
 BEAR.SetDefaultColor(CreateColor(255, 0, 0));
 BEAR.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
-BEARLITE.SetDefaultColor(CreateColor(128, 128, 128));
-BEARLITE.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);

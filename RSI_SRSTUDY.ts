@@ -4,7 +4,7 @@
 declare lower;
 
 input rsi_length = 14;
-input rsi_sr = 120;
+input rsi_sr = 60;
 input sma_length = 14;
 input over_bought = 70;
 input over_sold = 30;
@@ -21,7 +21,7 @@ Round(Lowest(rsi, length = rsi_sr), numberofdigits = 0);
 def rsi_high1 = 
 Round(Highest(rsi, length = rsi_sr), numberofdigits = 0);
 
-def sma = SimpleMovingAvg(price = rsi, length = sma_length);
+def sma = round(SimpleMovingAvg(price = rsi, length = sma_length),0);
 
 plot rsi_plot = rsi;
 plot rsi_sma = sma;
@@ -37,5 +37,5 @@ rsi_plot.AssignValueColor(if rsi > over_bought then rsi_plot.Color("overbought")
 rsi_sma.SetDefaultColor(GetColor(1));
 oversold.SetDefaultColor(GetColor(8));
 overbought.SetDefaultColor(GetColor(8));
-rsi1ml.SetDefaultColor(CreateColor(128, 128, 128));
-rsi1mh.SetDefaultColor(CreateColor(128, 128, 128));
+rsi1ml.SetDefaultColor(GetColor(1));
+rsi1mh.SetDefaultColor(GetColor(5));

@@ -24,12 +24,12 @@ def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
 
 plot BULL =
 !Redprice
-and RSI <=50
+and RSI <= 60
 and close >= high[1];
 
 plot BEAR =
 Redprice
-and RSI >=50
+and RSI >= 40
 and close <= low[1];
 
 BULL.SetDefaultColor(CreateColor(0, 255, 0));

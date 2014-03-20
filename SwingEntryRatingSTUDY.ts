@@ -26,13 +26,13 @@ plot RATING =
 
 if
 !Redprice
-and RSI <= 50
+and RSI <= 60
 and close >= high[1]
 then 1
 
 else if
 Redprice
-and RSI >= 50
+and RSI >= 40
 and close <= low[1]
 then -1
 

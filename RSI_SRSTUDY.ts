@@ -1,36 +1,41 @@
 # RSI_SR
-# WGRIFFITH2 (C) 2014
+# wgriffith2 (c) 2014
 
 declare lower;
 
-input len0 = 5;
-input len1 = 252;
-input len2 = 21;
+input rsi_length = 14;
+input rsi_sr = 120;
+input sma_length = 14;
+input over_bought = 70;
+input over_sold = 30;
 
-# RSI
-def NetChgAvg = WildersAverage(close - close[1], len0);
-def TotChgAvg = WildersAverage(AbsValue(close - close[1]), len0);
-def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
-def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
+# rsi
+def netchgavg = WildersAverage(close - close[1], rsi_length);
+def totchgavg = WildersAverage(AbsValue(close - close[1]), rsi_length);
+def chgratio = if totchgavg != 0 then netchgavg / totchgavg else 0;
+
+def rsi = Round(50 * (chgratio + 1), numberofdigits = 0);
 
 def rsi_low1 = 
-round(LOWEST(RSI,LENGTH=len1), numberOfDigits = 0);
+Round(Lowest(rsi, length = rsi_sr), numberofdigits = 0);
 def rsi_high1 = 
-round(HIGHEST(RSI,LENGTH=len1), numberOfDigits = 0);
+Round(Highest(rsi, length = rsi_sr), numberofdigits = 0);
 
-def rsi_low2 = 
-round(LOWEST(RSI,LENGTH=len2), numberOfDigits = 0);
-def rsi_high2 = 
-round(HIGHEST(RSI,LENGTH=len2), numberOfDigits = 0);
+def sma = SimpleMovingAvg(price = rsi, length = sma_length);
 
 plot rsi_plot = rsi;
-plot rsi2mH = rsi_high2;
-plot rsi2mL = rsi_low2;
-plot rsi1mH = rsi_high1;
-plot rsi1mL = rsi_low1;
+plot rsi_sma = sma;
+plot rsi1mh = rsi_high1;
+plot rsi1ml = rsi_low1;
+plot oversold = over_sold;
+plot overbought = over_bought;
 
-rsi2mL.SetDefaultColor(CreateColor(0, 255, 0));
-rsi2mH.SetDefaultColor(CreateColor(0, 255, 0));
-rsi1mL.SetDefaultColor(CreateColor(128, 128, 128));
-rsi1mH.SetDefaultColor(CreateColor(128, 128, 128));
-rsi_plot.SetDefaultColor(CreateColor(255, 0, 0));
+rsi_plot.DefineColor("overbought", GetColor(5));
+rsi_plot.DefineColor("normal", GetColor(7));
+rsi_plot.DefineColor("oversold", GetColor(1));
+rsi_plot.AssignValueColor(if rsi > over_bought then rsi_plot.Color("overbought") else if rsi < over_sold then rsi_plot.Color("oversold") else rsi_plot.Color("normal"));
+rsi_sma.SetDefaultColor(GetColor(1));
+oversold.SetDefaultColor(GetColor(8));
+overbought.SetDefaultColor(GetColor(8));
+rsi1ml.SetDefaultColor(CreateColor(128, 128, 128));
+rsi1mh.SetDefaultColor(CreateColor(128, 128, 128));

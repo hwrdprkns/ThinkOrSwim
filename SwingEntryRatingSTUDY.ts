@@ -22,17 +22,21 @@ def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
 
+def RSISMA = round(SimpleMovingAvg(price = RSI, length = 14),0);
+
 plot RATING =
 
 if
 !Redprice
 and RSI <= 60
+and RSI >= RSISMA
 and close >= high[1]
 then 1
 
 else if
 Redprice
 and RSI >= 40
+and RSI <= RSISMA
 and close <= low[1]
 then -1
 

@@ -26,13 +26,13 @@ def RSISMA = round(SimpleMovingAvg(price = RSI, length = 14),0);
 
 plot BULL =
 !Redprice
-and RSI <= 60
+and RSI <= 50
 and RSI >= RSISMA
 and close >= high[1];
 
 plot BEAR =
 Redprice
-and RSI >= 40
+and RSI >= 50
 and RSI <= RSISMA
 and close <= low[1];
 

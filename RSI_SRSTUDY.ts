@@ -4,7 +4,7 @@
 declare lower;
 
 input rsi_length = 14;
-input rsi_sr = 21;
+input rsi_sr = 20;
 input sma_length = 12;
 input over_bought = 70;
 input over_sold = 30;

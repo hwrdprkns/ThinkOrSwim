@@ -30,7 +30,7 @@ if
 !Redprice
 and !GreenPrice[1]
 and close >= close[1]
-and RSI <= 60
+and RSI <= 50
 and RSI >= RSISMA
 and lowest(FASTLINE[1],2) < 20
 then 1
@@ -39,7 +39,7 @@ else if
 !GreenPrice
 and !RedPrice[1]
 and close <= close[1]
-and RSI >= 40
+and RSI >= 50
 and RSI <= RSISMA
 and highest(FASTLINE[1],2) > 80
 then -1

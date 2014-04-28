@@ -5,8 +5,8 @@
 
 # Defaults are a nN day RSI SR for a target, and a three day low/high for a stoploss. If the target is reached, then switch to a 180 day RSI SR, and a stoploss of a close below/above the previous day. Let profitable breakouts ride until there's a hint of it stalling out.
 
-input SRLEN = 20;
-input StopLossLEN = 20;
+input SRLEN = 21;
+input StopLossLEN = 3;
 input StopPrice = high;
 
 # RSI SUPPORT/RESISTANCE (SR)

@@ -27,18 +27,18 @@ def RSISMA = round(SimpleMovingAvg(price = RSI, length = 12),0);
 plot BULL =
 !Redprice
 and !GreenPrice[1]
-and close >= highest(high[1],2)
+and close >= ohlc4[1]
 and RSI <= 50
 and RSI >= RSISMA
-and lowest(FASTLINE[1],2) <= 20;
+and lowest(FASTLINE[1],3) <= 20;
 
 plot BEAR =
 !GreenPrice
 and !RedPrice[1]
-and close <= lowest(low[1],2)
+and close <= ohlc4[1]
 and RSI >= 50
 and RSI <= RSISMA
-and highest(FASTLINE[1],2) >= 80;
+and highest(FASTLINE[1],3) >= 80;
 
 BULL.SetDefaultColor(CreateColor(0, 255, 0));
 BULL.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);

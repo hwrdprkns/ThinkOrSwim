@@ -28,7 +28,7 @@ plot BULL =
 !Redprice
 and !GreenPrice[1]
 and close >= ohlc4[1]
-and RSI <= 50
+and RSI <= 60
 and RSI >= RSISMA
 and lowest(FASTLINE[1],3) <= 20;
 
@@ -36,7 +36,7 @@ plot BEAR =
 !GreenPrice
 and !RedPrice[1]
 and close <= ohlc4[1]
-and RSI >= 50
+and RSI >= 40
 and RSI <= RSISMA
 and highest(FASTLINE[1],3) >= 80;
 

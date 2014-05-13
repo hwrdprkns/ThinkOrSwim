@@ -3,6 +3,8 @@
 
 declare upper;
 
+input RSISMA_LEN = 12;
+
 # STOCHASTICSLOW
 def KPERIOD = 14;
 def DPERIOD = 3;
@@ -22,7 +24,7 @@ def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
 
-def RSISMA = round(SimpleMovingAvg(price = RSI, length = 12),0);
+def RSISMA = round(SimpleMovingAvg(price = RSI, length = RSISMA_LEN),0);
 
 plot BULL =
 !Redprice

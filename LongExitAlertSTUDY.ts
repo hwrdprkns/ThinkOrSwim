@@ -1,24 +1,25 @@
 # LONGEXITALERT
 # WGRIFFITH2 (C) 2014
 
-# This is an alert that stocks is moving outside of normal trading range. Does not necessarily mean that it is a hard exit on either side but it is a signal to monitor much more closely.
+# THIS IS AN ALERT THAT STOCKS IS MOVING OUTSIDE OF NORMAL TRADING RANGE. DOES NOT NECESSARILY MEAN THAT IT IS A HARD EXIT ON EITHER SIDE BUT IT IS A SIGNAL TO MONITOR MUCH MORE CLOSELY.
 
-# Defaults are a nN day RSI SR for a target, and a three day low/high for a stoploss. If the target is reached, then switch to a 180 day RSI SR, and a stoploss of a close below/above the previous day. Let profitable breakouts ride until there's a hint of it stalling out.
+# DEFAULTS ARE A 40 DAY RSI SR FOR A TARGET, AND A 3 DAY LOW/HIGH FOR A STOPLOSS. IF THE TARGET IS REACHED, THEN SWITCH TO A LONGER RSI SR TARGET, AND A STOPLOSS OF A CLOSE BELOW/ABOVE THE PREVIOUS DAY. LET PROFITABLE BREAKOUTS RIDE UNTIL THERE'S A HINT OF IT STALLING OUT.
 
-input SRLEN = 21;
-input StopLossLEN = 3;
-input StopPrice = low;
+input SRLEN = 40;
+input RSI_LENGTH = 14;
+input STOPLOSSLEN = 3;
+input STOPPRICE = LOW;
 
 # RSI SUPPORT/RESISTANCE (SR)
-def NetChgAvg = WildersAverage(close - close[1], 14);
-def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
-def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
-def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
-def rsi_high2 = round(HIGHEST(RSI,LENGTH=SRLEN), numberOfDigits = 0);
-def Target = RSI == rsi_high2;
+def NETCHGAVG = WildersAverage(close - close[1], RSI_LENGTH);
+def TOTCHGAVG = WildersAverage(AbsValue(close - close[1]), RSI_LENGTH);
+def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
+def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
+def RSI_HIGH = Round(Highest(RSI, LENGTH = SRLEN), NUMBEROFDIGITS = 0);
+def TARGET = RSI == RSI_HIGH;
 
 # TRAILINGSTOP
-def STOP = close < Lowest(DATA = StopPrice, LENGTH = StopLossLEN)[1];
+def STOP = close < Lowest(DATA = STOPPRICE, LENGTH = STOPLOSSLEN)[1];
 
 plot EXIT = STOP or TARGET;
 EXIT.SetDefaultColor(CreateColor(255, 0, 0));

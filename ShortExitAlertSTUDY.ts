@@ -7,7 +7,7 @@
 
 input SRLEN = 40;
 input RSI_LENGTH = 14;
-input STOPLOSSLEN = 3;
+input STOPLOSSLEN = 20;
 input STOPPRICE = HIGH;
 
 # RSI SUPPORT/RESISTANCE (SR)
@@ -19,7 +19,7 @@ def RSI_LOW = Round(Lowest(RSI, LENGTH = SRLEN), NUMBEROFDIGITS = 0);
 def TARGET = RSI == RSI_LOW;
 
 # TRAILINGSTOP
-def STOP = close > Highest(DATA = STOPPRICE, LENGTH = STOPLOSSLEN)[1];
+def STOP = close > Highest(DATA = STOPPRICE, LENGTH = STOPLOSSLEN-1)[1];
 
 plot EXIT = STOP or TARGET;
 EXIT.SetDefaultColor(CreateColor(255, 0, 0));

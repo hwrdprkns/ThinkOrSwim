@@ -3,50 +3,47 @@
 
 # ONLY USED ON LONG POSITIONS
 
-input SRLEN = 21;
-input StopLossLEN = 3;
-input StopPrice = low;
+input SRLEN = 40;
+input STOPPRICE = LOW;
+input KPERIOD = 14;
+input DPERIOD = 3;
+input RSI_LEN = 14;
+input RSIMA_LEN = 12;
 
 # STOCHASTICSLOW
-def KPERIOD = 14;
-def DPERIOD = 3;
-def FASTLINE = Round(SimpleMovingAvg(100 * ((close - Lowest(low, KPERIOD)) / (Highest(high, KPERIOD) - Lowest(low, KPERIOD))), LENGTH = DPERIOD));
-def SLOWLINE = Round(SimpleMovingAvg(SimpleMovingAvg(100 * ((close - Lowest(low, KPERIOD)) / (Highest(high, KPERIOD) - Lowest(low, KPERIOD))), LENGTH = DPERIOD), LENGTH = DPERIOD));
+def FASTLINE = StochasticSlow("D PERIOD" = DPERIOD, "K PERIOD" = KPERIOD);
+def SLOWLINE = StochasticSlow("D PERIOD" = DPERIOD, "K PERIOD" = KPERIOD).SLOWD;
 
-# MACD
-def MACD = MACDHistogram("FAST LENGTH" = 5, "SLOW LENGTH" = 35, "MACD LENGTH" = 5);
+# RSI
+def NETCHGAVG = WildersAverage(close - close[1], RSI_LEN);
+def TOTCHGAVG = WildersAverage(AbsValue(close - close[1]), RSI_LEN);
+def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
+def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 1);
+def RSISMA = Round(SimpleMovingAvg(PRICE = RSI, LENGTH = RSIMA_LEN), 1);
 
-# OSCILLATOR TEST
-def GREENPRICE = MACD >= 0 and FASTLINE >= SLOWLINE;
-def REDPRICE = MACD < 0 and FASTLINE < SLOWLINE;
+# TEST
+def GREENPRICE = FASTLINE >= SLOWLINE and RSI >= RSISMA;
+def REDPRICE = FASTLINE < SLOWLINE and RSI < RSISMA;
 
 # RSI SUPPORT/RESISTANCE (SR)
-def NetChgAvg = WildersAverage(close - close[1], 14);
-def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
-def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
-def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
-def rsi_high2 = round(HIGHEST(RSI,LENGTH=SRLEN), numberOfDigits = 0);
-def TARGET = RSI == rsi_high2;
-
-def RSISMA = round(SimpleMovingAvg(price = RSI, length = 12),0);
+def RSI_HIGH = Round(Highest(RSI, LENGTH = SRLEN), NUMBEROFDIGITS = 0);
+def TARGET = RSI == RSI_HIGH;
+DEF STOP = RSI < RSISMA;
 
 # DEFINING ENTRY
-DEF ENTRY = !Redprice
-and close >= close[1]
-and RSI <= 60
-and RSI >= RSISMA
-and lowest(FASTLINE[1],2) < 20;
+plot ENTRY =
+GREENPRICE
+AND RSI[1] < RSISMA[1]
+AND RSISMA <= 50
+AND RSISMA >= 30;
 
-# TRAILINGSTOP
-def STOP = close < Lowest(DATA = StopPrice, LENGTH = StopLossLEN)[1];
-
-plot EXIT = STOP or TARGET;
+plot EXIT = STOP OR TARGET;
 
 #DEF SHARES = ROUND(10000 / CLOSE);
-DEF SHARES = 100;
+def SHARES = 100;
 
 #LONG POSITION:
-ADDORDER(ORDERTYPE.BUY_TO_OPEN, ENTRY IS TRUE, TRADESIZE = SHARES, TICKCOLOR = GETCOLOR(0), ARROWCOLOR = GETCOLOR(0), NAME = "LE");
-ADDORDER(ORDERTYPE.SELL_TO_CLOSE, EXIT IS TRUE, TRADESIZE = SHARES, TICKCOLOR = GETCOLOR(1), ARROWCOLOR = GETCOLOR(1), NAME = "LX", PRICE = ohlc4());
+AddOrder(OrderType.BUY_TO_OPEN, ENTRY is true, tradeSize = SHARES, tickcolor = GetColor(0), arrowcolor = GetColor(0), name = "LE");
+AddOrder(OrderType.SELL_TO_CLOSE, EXIT is true, tradeSize = SHARES, tickcolor = GetColor(1), arrowcolor = GetColor(1), name = "LX");
 
 ##################################################

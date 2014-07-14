@@ -3,24 +3,25 @@
 
 declare upper;
 
-input SRLEN = 21;
+input rsi_length = 14;
+input rsi_sr = 20;
 
-def NetChgAvg = WildersAverage(close - close[1], 14);
-def TotChgAvg = WildersAverage(AbsValue(close - close[1]), 14);
+def NetChgAvg = WildersAverage(close - close[1], rsi_length);
+def TotChgAvg = WildersAverage(AbsValue(close - close[1]), rsi_length);
 def ChgRatio = if TotChgAvg != 0 then NetChgAvg / TotChgAvg else 0;
 def RSI = round(50 * (ChgRatio + 1), numberOfDigits = 0);
 def chg = close - close[1];
 
 # RSI Resistance
-def rsiValueUpper = round(HIGHEST(RSI,LENGTH=SRLEN), numberOfDigits = 0);
+def rsiValueUpper = round(HIGHEST(RSI,LENGTH=rsi_sr), numberOfDigits = 0);
 def UpperCoeff = rsiValueUpper / (100 - rsiValueUpper);
-def UpperDiff =  (14 - 1) * (WildersAverage(Max(-chg, 0), 14) * UpperCoeff - WildersAverage(Max(chg, 0), 14));
+def UpperDiff =  (rsi_length - 1) * (WildersAverage(Max(-chg, 0), rsi_length) * UpperCoeff - WildersAverage(Max(chg, 0), rsi_length));
 def UpperValue = close + if UpperDiff >= 0 then UpperDiff else UpperDiff / UpperCoeff;
 
 # RSI Support
-def rsiValueLower = round(Lowest(RSI,LENGTH=SRLEN), numberOfDigits = 0);
+def rsiValueLower = round(Lowest(RSI,LENGTH=rsi_sr), numberOfDigits = 0);
 def LowerCoeff = rsiValueLower / (100 - rsiValueLower);
-def LowerDiff =  (14 - 1) * (WildersAverage(Max(-chg, 0), 14) * LowerCoeff - WildersAverage(Max(chg, 0), 14));
+def LowerDiff =  (rsi_length - 1) * (WildersAverage(Max(-chg, 0), rsi_length) * LowerCoeff - WildersAverage(Max(chg, 0), rsi_length));
 def LowerValue = close + if LowerDiff >= 0 then LowerDiff else LowerDiff / LowerCoeff;
 
 plot UpperRevEngRSI = compoundValue(1, UpperValue[1], Double.NaN);

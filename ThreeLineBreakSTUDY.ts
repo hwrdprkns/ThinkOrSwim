@@ -1,6 +1,8 @@
 # THREELINEBREAK
 # WGRIFFITH2 (C) 2014
 
+## NOT IN PRODUCTION ## 
+
 def FirstLineHigh = if close[2] > close[3] then close[2] else close[3];
 
 def FirstLineLow = if close[2] < close[3] then close[2] else close[3];
@@ -21,6 +23,7 @@ def ThirdLineLow = if close[0] < min(FirstLineLow,SecondLineLow) then close[0] #
 
 def tlbH = if ThirdLineHigh > max(ThirdLineHigh[1],ThirdLineHigh[2]) then ThirdLineHigh
            else ThirdLineHigh[1];
+
 def tblL = if ThirdLineLow < min(ThirdLineLow[1],ThirdLineLow[2]) then ThirdLineLow
            else ThirdLineLow[1];
 

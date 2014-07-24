@@ -1,5 +1,5 @@
 # RSI_SR
-# wgriffith2 (c) 2014
+# DREWGRIFFITH15 (c) 2014
 
 declare lower;
 
@@ -16,9 +16,9 @@ def chgratio = if totchgavg != 0 then netchgavg / totchgavg else 0;
 
 def rsi = Round(50 * (chgratio + 1), numberofdigits = 0);
 
-def rsi_low1 = 
+def rsi_low1 =
 Round(Lowest(rsi, length = rsi_sr), numberofdigits = 0);
-def rsi_high1 = 
+def rsi_high1 =
 Round(Highest(rsi, length = rsi_sr), numberofdigits = 0);
 
 def sma = round(SimpleMovingAvg(price = rsi, length = sma_length),0);

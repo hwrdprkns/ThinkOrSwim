@@ -1,7 +1,7 @@
 # THREELINEBREAK
-# WGRIFFITH2 (C) 2014
+# DREWGRIFFITH15 (C) 2014
 
-## NOT IN PRODUCTION ## 
+## NOT IN PRODUCTION ##
 
 def FirstLineHigh = if close[2] > close[3] then close[2] else close[3];
 
@@ -34,12 +34,12 @@ def isWhite = if ThirdLineHigh > max(ThirdLineHigh[1],ThirdLineHigh[2]) then yes
 DefineGlobalColor( "3LBH", Color.WHITE );
 DefineGlobalColor( "3LBL", Color.DARK_RED );
 plot TLB_High = tlbH;
-TLB_High.SetPaintingStrategy( PaintingStrategy.DASHES );
+TLB_High.SetPaintingStrategy( PaintingStrategy.BOOLEAN_POINTS );
 TLB_High.AssignValueColor( if isWhite then GlobalColor("3LBH") else GlobalColor("3LBL"));
 plot TLB_Low = tblL;
-TLB_Low.SetPaintingStrategy( PaintingStrategy.DASHES );
+TLB_Low.SetPaintingStrategy( PaintingStrategy.BOOLEAN_POINTS );
 TLB_Low.AssignValueColor( if isWhite then GlobalColor("3LBH") else GlobalColor("3LBL"));
-#AddCloud( TLB_High, TLB_Low, color1 = Color.WHITE );
+#AddCloud( TLB_High, TLB_Low, color1 = Color.WHITE, COLOR2 = COLOR.RED );
 plot P = close;
 P.SetPaintingStrategy( PaintingStrategy.POINTS );
 P.Hide();

@@ -1,5 +1,5 @@
 # RVI
-# WGRIFFITH2 (c) 2014
+# DREWGRIFFITH15 (c) 2014
 
 # Study combines Relative Strength Index and Relative Volatility Index
 

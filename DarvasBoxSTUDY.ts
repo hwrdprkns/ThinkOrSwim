@@ -1,5 +1,5 @@
 # DARVASBOX
-# WGRIFFITH2 (C) 2014
+# DREWGRIFFITH15 (C) 2014
 
 def state = {default state_1, state_2, state_3, state_4, state_5};
 

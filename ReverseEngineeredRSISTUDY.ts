@@ -1,5 +1,5 @@
 # ReverseEngineeredRSI
-# WGRIFFITH2 (C) 2014
+# DREWGRIFFITH15 (C) 2014
 
 declare upper;
 

@@ -1,41 +1,51 @@
 # RSI_SR
-# DREWGRIFFITH15 (c) 2014
+# DREWGRIFFITH15 (C) 2014
 
-declare lower;
+DECLARE LOWER;
 
-input rsi_length = 14;
-input rsi_sr = 20;
-input sma_length = 12;
-input over_bought = 70;
-input over_sold = 30;
+INPUT RSI_LENGTH = 14;
+INPUT RSI_SR = 60;
+INPUT SMA_LENGTH = 12;
+INPUT OVER_BOUGHT = 70;
+INPUT OVER_SOLD = 30;
+INPUT MOVEMENT = 10;
 
-# rsi
-def netchgavg = WildersAverage(close - close[1], rsi_length);
-def totchgavg = WildersAverage(AbsValue(close - close[1]), rsi_length);
-def chgratio = if totchgavg != 0 then netchgavg / totchgavg else 0;
+# RSI
+DEF NETCHGAVG = WILDERSAVERAGE(CLOSE - CLOSE[1], RSI_LENGTH);
+DEF TOTCHGAVG = WILDERSAVERAGE(ABSVALUE(CLOSE - CLOSE[1]), RSI_LENGTH);
+DEF CHGRATIO = IF TOTCHGAVG != 0 THEN NETCHGAVG / TOTCHGAVG ELSE 0;
 
-def rsi = Round(50 * (chgratio + 1), numberofdigits = 0);
+plot RSI = ROUND(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
-def rsi_low1 =
-Round(Lowest(rsi, length = rsi_sr), numberofdigits = 0);
-def rsi_high1 =
-Round(Highest(rsi, length = rsi_sr), numberofdigits = 0);
+plot RSI_HIGH = ROUND(HIGHEST(RSI, LENGTH = RSI_SR), NUMBEROFDIGITS = 0);
 
-def sma = round(SimpleMovingAvg(price = rsi, length = sma_length),0);
+plot RSI_LOW = ROUND(LOWEST(RSI, LENGTH = RSI_SR), NUMBEROFDIGITS = 0);
 
-plot rsi_plot = rsi;
-plot rsi_sma = sma;
-plot rsi1mh = rsi_high1;
-plot rsi1ml = rsi_low1;
-plot oversold = over_sold;
-plot overbought = over_bought;
+plot RSI_SMA = ROUND(SIMPLEMOVINGAVG(PRICE = RSI, LENGTH = SMA_LENGTH),0);
 
-rsi_plot.DefineColor("overbought", GetColor(5));
-rsi_plot.DefineColor("normal", GetColor(7));
-rsi_plot.DefineColor("oversold", GetColor(1));
-rsi_plot.AssignValueColor(if rsi > over_bought then rsi_plot.Color("overbought") else if rsi < over_sold then rsi_plot.Color("oversold") else rsi_plot.Color("normal"));
-rsi_sma.SetDefaultColor(GetColor(1));
-oversold.SetDefaultColor(GetColor(8));
-overbought.SetDefaultColor(GetColor(8));
-rsi1ml.SetDefaultColor(GetColor(1));
-rsi1mh.SetDefaultColor(GetColor(5));
+PLOT RATING =
+IF RSI == RSI_HIGH AND round(RSI-RSI[1],2) >= MOVEMENT THEN round(RSI-RSI[1],0)
+ELSE IF RSI == RSI_LOW AND round(RSI-RSI[1],2) <= -MOVEMENT THEN round(RSI-RSI[1],0)
+ELSE 0;
+
+RSI.SETDEFAULTCOLOR(COLOR.GRAY);
+RSI.SETLINEWEIGHT(3);
+RSI.ASSIGNVALUECOLOR(IF RSI == RSI_LOW THEN COLOR.YELLOW ELSE IF RSI == RSI_HIGH THEN COLOR.YELLOW ELSE COLOR.GRAY);
+
+RSI_HIGH.SETDEFAULTCOLOR(COLOR.CYAN);
+RSI_HIGH.SETLINEWEIGHT(1);
+
+RSI_LOW.SETDEFAULTCOLOR(COLOR.CYAN);
+RSI_LOW.SETLINEWEIGHT(1);
+
+RSI_SMA.SETDEFAULTCOLOR(COLOR.CYAN);
+RSI_SMA.SETLINEWEIGHT(1);
+
+PLOT OVERBOUGHT = OVER_BOUGHT;
+OVERBOUGHT.SETDEFAULTCOLOR(COLOR.DARK_GRAY);
+
+PLOT OVERSOLD = OVER_SOLD;
+OVERSOLD.SETDEFAULTCOLOR(COLOR.DARK_GRAY);
+
+RATING.HIDE();
+RATING.HIDEBUBBLE();

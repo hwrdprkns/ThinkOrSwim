@@ -77,11 +77,9 @@ LOWEST(DATA = CLOSE, LENGTH = 30)[30]<LOWEST(DATA = CLOSE, LENGTH = 30) AND
 VOLUMEAVG().VOLAVG[60] > VOLUMEAVG().VOLAVG AND
 # NEW 60 DAY HIGH
 CLOSE()>HIGHEST(DATA = CLOSE, LENGTH = 60)[1] AND
-# HEAVY VOLUME TODAY
-VOLUMEAVG(LENGTH = 10) > VOLUMEAVG().VOLAVG
 ##################################################################
 # DARVAS BOX BREAKOUT
-(CLOSE > HIGHEST(DATA = HIGH, LENGTH = 8)[1] OR 
+(CLOSE > HIGHEST(DATA = HIGH, LENGTH = 8)[1] OR
 CLOSE < LOWEST(DATA = LOW, LENGTH = 8)[1]) AND
 VOLUMEAVG(LENGTH = 10) > VOLUMEAVG(LENGTH = 10).VOLAVG
 ##################################################################
@@ -90,7 +88,7 @@ VOLUMEAVG(LENGTH = 10) > VOLUMEAVG(LENGTH = 10).VOLAVG
 VOLUMEAVG(LENGTH = 20) > VOLUMEAVG(LENGTH = 20).VOLAVG AND
 STOCHASTICSLOW("K PERIOD" = 14, "D PERIOD" = 3) <= 60 AND
 TRENDQUALITY("TREND LENGTH" = 3, "NOISE LENGTH" = 90) > 0
-# TOO COMPLEX BEYOND THIS POINT DURING MARKET HOURS 
+# TOO COMPLEX BEYOND THIS POINT DURING MARKET HOURS
 #AND STOCHASTICSLOWTREND() > 0
 ##################################################################
 # HEAVY VOLUME/STOCHASTIC BUY AREA
@@ -98,4 +96,7 @@ VolumeAvg(LENGTH = 20) > VolumeAvg(LENGTH = 20).VOLAVG and
 StochasticSlow("K PERIOD" = 14, "D PERIOD" = 3) <= 50 and
 STOCHASTICSLOWTREND() > 0 and
 Close>Close[1]
+##################################################################
+# RSI SUPPORT / RESISTANCE BREAKOUT
+reference RSI_SR(rsisr = 20).RSI == RSI_SR(rsisr = 20).RSI_HIGH and RSI_SR(rsisr = 20).RSI_HIGH <= 60
 ##################################################################

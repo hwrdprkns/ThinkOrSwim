@@ -22,7 +22,7 @@ plot SR_LOW = Round(Lowest(RSI, LENGTH = SR_LENGTH), NUMBEROFDIGITS = 0);
 
 plot RSI_SMA = Round(SimpleMovingAvg(PRICE = RSI, LENGTH = SMA_LENGTH), 0);
 
-RSI.SetDefaultColor(Color.GRAY);
+RSI.ASSIGNVALUECOLOR(if RSI CROSSES RSI_SMA THEN COLOR.YELLOW ELSE Color.GRAY);
 RSI.SetLineWeight(3);
 
 SR_HIGH.SetDefaultColor(Color.GRAY);
@@ -33,7 +33,7 @@ SR_LOW.SetDefaultColor(Color.GRAY);
 SR_LOW.SetStyle(Curve.SHORT_DASH);
 SR_LOW.SetLineWeight(1);
 
-RSI_SMA.SetDefaultColor(Color.DARK_GRAY);
+RSI_SMA.ASSIGNVALUECOLOR(if RSI CROSSES RSI_SMA THEN COLOR.YELLOW ELSE Color.DARK_GRAY);
 RSI_SMA.SetStyle(Curve.SHORT_DASH);
 RSI_SMA.SetLineWeight(1);
 

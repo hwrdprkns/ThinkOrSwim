@@ -1,30 +1,37 @@
 # CANDLESTICKER
 # DREWGRIFFITH15 (C) 2014
 
-INPUT LENGTH = 20;
-INPUT TRENDSETUP = 5;
+declare upper;
 
-PLOT BULLISH = ((MORNINGSTAR(length = LENGTH, "trend setup" = TRENDSETUP) OR
-PIERCINGLINE(length = LENGTH, "trend setup" = TRENDSETUP) OR
-HAMMER(LENGTH = LENGTH, "TREND SETUP" = TRENDSETUP) OR
-THREEWHITESOLDIERS(length = LENGTH, "trend setup" = TRENDSETUP) OR
-THREEINSIDEUP(length = LENGTH, "trend setup" = TRENDSETUP) OR
-THREEOUTSIDEUP(length = LENGTH, "trend setup" = TRENDSETUP)) OR
-# BULLISH SQUEEZEALERT
-(high[2] > high[1] and high[1] > high[0] and low[2] < low[1] and low[1] < low[0] and close > close[1]));
+plot BULLISH =
+Lowest(low, 20) == Lowest(low, 2)
 
-PLOT BEARISH = ((EVENINGSTAR(length = LENGTH, "trend setup" = TRENDSETUP) OR
-THREEBLACKCROWS(length = LENGTH, "trend setup" = TRENDSETUP) OR
-THREEINSIDEDOWN(length = LENGTH, "trend setup" = TRENDSETUP) OR
-THREEOUTSIDEDOWN(length = LENGTH, "trend setup" = TRENDSETUP) OR
-SHOOTINGSTAR(length = LENGTH, "trend setup" = TRENDSETUP) OR
-HANGINGMAN(LENGTH = LENGTH, "TREND SETUP" = TRENDSETUP) OR
-DARKCLOUDCOVER(length = LENGTH, "trend setup" = TRENDSETUP)) OR
-# BEARISH SQUEEZEALERT
-(high[2] > high[1] and high[1] > high[0] and low[2] < low[1] and low[1] < low[0] and close < close[1]));
+# Long Lower Shadow
+and (close - low >= BodyHeight() * 3 and close > OHLC4
+or Marubozu().BULLISH
+or Engulfing().BULLISH
+or PiercingLine());
 
-BULLISH.SETDEFAULTCOLOR(CREATECOLOR(128, 128, 128));
-BULLISH.SETPAINTINGSTRATEGY(PAINTINGSTRATEGY.BOOLEAN_ARROW_UP);
-BEARISH.SETDEFAULTCOLOR(CREATECOLOR(128, 128, 128));
-BEARISH.SETPAINTINGSTRATEGY(PAINTINGSTRATEGY.BOOLEAN_ARROW_DOWN);
+
+plot BEARISH =
+Highest(high, 20) == Highest(high, 2)
+
+# Long Upper Shadow
+and high - close >= BodyHeight() * 3 and close < OHLC4
+or Marubozu().BEARISH
+or Engulfing().BEARISH
+or DarkCloudCover();
+
+
+plot RATING =
+if BULLISH then 1
+else if BEARISH then .5
+else 0;
+
+BULLISH.SetDefaultColor(CreateColor(128, 128, 128));
+BULLISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+BEARISH.SetDefaultColor(CreateColor(128, 128, 128));
+BEARISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+RATING.Hide();
+RATING.HideBubble();
 #########################################

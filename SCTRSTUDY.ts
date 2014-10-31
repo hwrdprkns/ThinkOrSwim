@@ -13,6 +13,7 @@ input LT_WEIGHT = .30;
 input MD_WEIGHT = .15;
 input SH_WEIGHT = .05;
 input SR_LENGTH = 40;
+input SMA_LENGTH = 10;
 
 # THIS STUDY IS A REPLICATION OF STOCKCHARTS TECHNICAL RANKING
 # http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr
@@ -46,18 +47,25 @@ def SH = (SHPPO + SHRSI) * SH_WEIGHT;
 
 plot SCTR = Round(LT + MD + SH, NUMBEROFDIGITS = 1);
 
+plot SCTR_SMA = Round(SimpleMovingAvg(PRICE = SCTR, LENGTH = SMA_LENGTH), NUMBEROFDIGITS = 1);
+
 plot LONG_SR_HIGH = Round(Highest(SCTR, LENGTH = SR_LENGTH), NUMBEROFDIGITS = 1);
 
 plot LONG_SR_LOW = Round(Lowest(SCTR, LENGTH = SR_LENGTH), NUMBEROFDIGITS = 1);
 
-SCTR.SetDefaultColor(Color.GRAY);
+SCTR.SetDefaultColor(Color.CYAN);
 SCTR.SetLineWeight(3);
 
-LONG_SR_HIGH.SetDefaultColor(Color.GRAY);
+SCTR_SMA.ASSIGNVALUECOLOR(if SCTR CROSSES SCTR_SMA THEN COLOR.GREEN ELSE Color.CYAN);
+SCTR_SMA.SetStyle(Curve.SHORT_DASH);
+SCTR_SMA.SetLineWeight(1);
+SCTR_SMA.Hide();
+
+LONG_SR_HIGH.SetDefaultColor(Color.DARK_GRAY);
 LONG_SR_HIGH.SetStyle(Curve.SHORT_DASH);
 LONG_SR_HIGH.SetLineWeight(1);
 
-LONG_SR_LOW.SetDefaultColor(Color.GRAY);
+LONG_SR_LOW.SetDefaultColor(Color.DARK_GRAY);
 LONG_SR_LOW.SetStyle(Curve.SHORT_DASH);
 LONG_SR_LOW.SetLineWeight(1);
 

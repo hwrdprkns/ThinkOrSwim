@@ -1,5 +1,5 @@
 # SCTR
-# DREWGRIFFITH15 (C) 2014
+# DREWGRIFFITH15 (C) 2015
 
 declare lower;
 
@@ -53,7 +53,7 @@ plot LONG_SR_HIGH = Round(Highest(SCTR, LENGTH = SR_LENGTH), NUMBEROFDIGITS = 1)
 
 plot LONG_SR_LOW = Round(Lowest(SCTR, LENGTH = SR_LENGTH), NUMBEROFDIGITS = 1);
 
-SCTR.SetDefaultColor(Color.CYAN);
+SCTR.SetDefaultColor(Color.Gray);
 SCTR.SetLineWeight(3);
 
 SCTR_SMA.ASSIGNVALUECOLOR(if SCTR CROSSES SCTR_SMA THEN COLOR.GREEN ELSE Color.CYAN);
@@ -61,12 +61,12 @@ SCTR_SMA.SetStyle(Curve.SHORT_DASH);
 SCTR_SMA.SetLineWeight(1);
 SCTR_SMA.Hide();
 
-LONG_SR_HIGH.SetDefaultColor(Color.DARK_GRAY);
-LONG_SR_HIGH.SetStyle(Curve.SHORT_DASH);
+LONG_SR_HIGH.SetDefaultColor(Color.CYAN);
+#LONG_SR_HIGH.SetStyle(Curve.SHORT_DASH);
 LONG_SR_HIGH.SetLineWeight(1);
 
-LONG_SR_LOW.SetDefaultColor(Color.DARK_GRAY);
-LONG_SR_LOW.SetStyle(Curve.SHORT_DASH);
+LONG_SR_LOW.SetDefaultColor(Color.CYAN);
+#LONG_SR_LOW.SetStyle(Curve.SHORT_DASH);
 LONG_SR_LOW.SetLineWeight(1);
 
 ### $$$ ###

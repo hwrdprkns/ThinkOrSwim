@@ -40,8 +40,11 @@ def MD = (MDSMA + MDROC) * MD_WEIGHT;
 #  * 3-day slope of PPO-Histogram (5%)
 #  * 14-day RSI (5%)
 
-def MACD = MACDHistogram();
-def SHPPO = LinearRegressionSlope(MACD, length = 3);
+def EMA12 = MovAvgExponential(Close,12);
+def EMA26 = MovAvgExponential(Close,26);
+#def MACD = EMA12 - EMA26;
+def PPO = (EMA12-EMA26)/EMA26*100
+def SHPPO = LinearRegressionSlope(PPO, length = 3);
 def SHRSI = reference RSI();
 def SH = (SHPPO + SHRSI) * SH_WEIGHT;
 

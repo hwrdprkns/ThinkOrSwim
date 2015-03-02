@@ -13,7 +13,6 @@ input LT_WEIGHT = .30;
 input MD_WEIGHT = .15;
 input SH_WEIGHT = .05;
 input SR_LENGTH = 40;
-input SMA_LENGTH = 10;
 
 # THIS STUDY IS A REPLICATION OF STOCKCHARTS TECHNICAL RANKING
 # http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr
@@ -24,7 +23,7 @@ input SMA_LENGTH = 10;
 
 def SM200 = SimpleMovingAvg(close, SMA200);
 def LTSMA = ((close - SM200) / ((close + SM200) / 2));
-def LTROC = if close[ROC125] > 0 then (close / close[ROC125] - 1) * 100 else 0;
+def LTROC = rateOfChange(ROC125,close);
 def LT = (LTSMA + LTROC) * LT_WEIGHT;
 
 #Medium-Term Indicators (weighting)
@@ -33,7 +32,7 @@ def LT = (LTSMA + LTROC) * LT_WEIGHT;
 
 def SM50 = SimpleMovingAvg(close, SMA50);
 def MDSMA = ((close - SM50) / ((close + SM50) / 2));
-def MDROC = if close[ROC20] > 0 then (close / close[ROC20] - 1) * 100 else 0;
+def MDROC = rateOfChange(ROC20,close);
 def MD = (MDSMA + MDROC) * MD_WEIGHT;
 
 #Short-Term Indicators (weighting)
@@ -43,26 +42,34 @@ def MD = (MDSMA + MDROC) * MD_WEIGHT;
 def EMA12 = MovAvgExponential(Close,12);
 def EMA26 = MovAvgExponential(Close,26);
 #def MACD = EMA12 - EMA26;
-def PPO = (EMA12-EMA26)/EMA26*100
-def SHPPO = LinearRegressionSlope(PPO, length = 3);
+def PPO = (EMA12-EMA26)/EMA26*100;
+def PPOlinear = 6 * ( WMA(PPO,3) -  average(PPO,3)) / (3 - 1);
+
+# Mutliplier to get values between 0-100
+
+def PPOdiff = PPOlinear - PPOlinear[1];
+def NetChgAvg = simpleMovingAvg(PPOdiff, 3);
+def TotChgAvg = simpleMovingAvg(AbsValue(PPOdiff), 3);
+def ChgRatio = if(TotChgAvg != 0, (NetChgAvg / TotChgAvg),0);
+
+def SHPPO = round(50 * (ChgRatio + 1),3) / 100;
 def SHRSI = reference RSI();
 def SH = (SHPPO + SHRSI) * SH_WEIGHT;
 
 plot SCTR = Round(LT + MD + SH, NUMBEROFDIGITS = 1);
 
-plot SCTR_SMA = Round(SimpleMovingAvg(PRICE = SCTR, LENGTH = SMA_LENGTH), NUMBEROFDIGITS = 1);
-
 plot LONG_SR_HIGH = Round(Highest(SCTR, LENGTH = SR_LENGTH), NUMBEROFDIGITS = 1);
 
 plot LONG_SR_LOW = Round(Lowest(SCTR, LENGTH = SR_LENGTH), NUMBEROFDIGITS = 1);
 
-SCTR.SetDefaultColor(Color.Gray);
+plot ZERO = 0;
+
+SCTR.ASSIGNVALUECOLOR(if SCTR >= ZERO THEN COLOR.GREEN ELSE Color.RED);
 SCTR.SetLineWeight(3);
 
-SCTR_SMA.ASSIGNVALUECOLOR(if SCTR CROSSES SCTR_SMA THEN COLOR.GREEN ELSE Color.CYAN);
-SCTR_SMA.SetStyle(Curve.SHORT_DASH);
-SCTR_SMA.SetLineWeight(1);
-SCTR_SMA.Hide();
+ZERO.SetDefaultColor(Color.DARK_GRAY);
+ZERO.SetLineWeight(1);
+ZERO.Hide();
 
 LONG_SR_HIGH.SetDefaultColor(Color.CYAN);
 #LONG_SR_HIGH.SetStyle(Curve.SHORT_DASH);

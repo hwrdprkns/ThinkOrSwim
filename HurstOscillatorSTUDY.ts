@@ -1,6 +1,11 @@
+# HurstOscillator
+# DREWGRIFFITH15 (C) 2015
+
+# AKA: CenterOfGravity Osc
+
 declare lower;
 
-input price = hl2;
+input price = close;
 input length = 10;
 input InnerValue = 1.6;
 input OuterValue = 2.6;
@@ -9,12 +14,15 @@ input ExtremeValue = 4.2;
 def displacement = (-length / 2) + 1;
 def dPrice = price[displacement];
 
-rec CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(length)) else
+def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(length)) else
 CMA[1] + (CMA[1] - CMA[2]);
 
 def OscValue = if close > close[1] then high else if close < close[1] then
 low else (high + low)/2;
-plot HurstOsc = (100 * OscValue/CMA) - 100;
+
+plot HurstOsc = if ((100 * OscValue/CMA) - 100) > 10 then 10
+else if  ((100 * OscValue/CMA) - 100) < -10 then -10
+else  ((100 * OscValue/CMA) - 100);
 
 HurstOsc.SetDefaultColor(GetColor(1));
 HurstOsc.SetLineWeight(2);

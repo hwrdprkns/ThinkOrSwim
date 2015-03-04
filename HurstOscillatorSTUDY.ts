@@ -48,10 +48,10 @@ UpperOuterBand.SetLineWeight(1);
 LowerOuterBand.SetDefaultColor(GetColor(6));
 LowerOuterBand.SetLineWeight(1);
 
-UpperInnerBand.SetDefaultColor(GetColor(1));
+UpperInnerBand.SetDefaultColor(GetColor(5));
 UpperInnerBand.SetLineWeight(1);
 UpperInnerBand.SetStyle(Curve.SHORT_DASH);
-LowerInnerBand.SetDefaultColor(GetColor(1));
+LowerInnerBand.SetDefaultColor(GetColor(6));
 LowerInnerBand.SetLineWeight(1);
 LowerInnerBand.SetStyle(Curve.SHORT_DASH);
 

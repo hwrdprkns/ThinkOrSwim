@@ -1,27 +1,21 @@
 # EXITALERT
 # DREWGRIFFITH15 (C) 2015
 
-INPUT SIDE = {DEFAULT LONG, SHORT};
-INPUT TARGET = 140; # 10 days on a 30 minute chart
-INPUT TRAIL = 14; # 1 day on a 30 minute chart
-INPUT DISPLACE = -1;
+input rsi_length = 2;
+input target = 75;
+input price = close;
 
-DEF STOP;
-SWITCH (SIDE) {
-CASE LONG:
-    STOP = CLOSE < LOWEST(LOW()[-DISPLACE], TRAIL);
-CASE SHORT:
-    STOP = CLOSE > HIGHEST(HIGH()[-DISPLACE], TRAIL);
-}
+# On a buy, 30% profit target will be set by default.
+# Otherwise, RSI2 will be used to determine exit.
+# Even on a loss, the RSI2 >= 75 typically indicates a lower high sell point.
+# I see this as selling at a high for a stop loss.
 
-DEF LMT;
-SWITCH (SIDE) {
-CASE LONG:
-    LMT = CLOSE >= HIGHEST(HIGH()[-DISPLACE], TARGET);
-CASE SHORT:
-    LMT = CLOSE <= LOWEST(LOW()[-DISPLACE], TARGET);
-}
+# RSI
+def NETCHGAVG = WildersAverage(price - price[1], rsi_length);
+def TOTCHGAVG = WildersAverage(AbsValue(price - price[1]), rsi_length);
+def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
+def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
-PLOT EXIT = STOP OR LMT;
+PLOT EXIT = RSI >= TARGET;
 EXIT.SETDEFAULTCOLOR(CREATECOLOR(255, 255, 255));
 EXIT.SETPAINTINGSTRATEGY(PAINTINGSTRATEGY.BOOLEAN_ARROW_DOWN);

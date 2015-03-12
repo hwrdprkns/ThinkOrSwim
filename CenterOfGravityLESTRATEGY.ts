@@ -1,10 +1,5 @@
 # CenterOfGravity
-# DREWGRIFFITH15 (C) 2015
-
-# Using the Hurst Osc combined with the RSI2 to find extremely oversold stocks
-# Stock must have SCTR > 0 and recommended that MoneyWave5 is < 20
-
-declare upper;
+# WGRIFFITH2 (C) 2014
 
 input price = close;
 input length = 10;
@@ -33,7 +28,15 @@ def TOTCHGAVG = WildersAverage(AbsValue(price - price[1]), RSI_LENGTH);
 def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
 def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
-plot BULLISH = HurstOsc < -ExtremeValue and RSI <= 5 and MoneyWave <= over_sold and  close < hl2();
+def entry = HurstOsc < -ExtremeValue and RSI <= 5 and MoneyWave <= over_sold and close < hl2();
 
-BULLISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
-BULLISH.AssignValueColor(if BULLISH == 1 then Color.GREEN else if BULLISH == .5 then Color.YELLOW else Color.WHITE);
+def target = RSI >= 75;
+
+DEF SHARES = ROUND(5000 / CLOSE);
+DEF FOOBAR = SHARES;
+
+#LONG POSITION:
+AddOrder(condition = ENTRY is true, TRADESIZE = FOOBAR, TICKCOLOR = GetColor(0), ARROWCOLOR = GetColor(0), NAME = "ENTRY", price = close()[0], type = OrderType.BUY_TO_OPEN);
+ADDORDER(OrderType.SELL_TO_CLOSE, target IS TRUE, TRADESIZE = FOOBAR, TICKCOLOR = GETCOLOR(1), ARROWCOLOR = GETCOLOR(1), NAME = "EXIT", PRICE = Close());
+
+##################################################

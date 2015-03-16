@@ -1,9 +1,5 @@
 # CenterOfGravity
-# DREWGRIFFITH15 (C) 2015
-
-# Finding extremely oversold stocks - Stock must have SCTR > 0, MoneyWave5 is < 20, RSI2 < 5 and Hurst Osc below - 2.6 for LONG positions
-
-declare upper;
+# WGRIFFITH2 (C) 2015
 
 input price = close;
 input length = 10;
@@ -31,14 +27,15 @@ def TOTCHGAVG = WildersAverage(AbsValue(price - price[1]), RSI_LENGTH);
 def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
 def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
-plot BULLISH = HurstOsc < -ExtremeValue and RSI <= 5 and MoneyWave <= 20; #and close >= MovAvgExponential(length = 250);
+def entry = HurstOsc > ExtremeValue and RSI >= 95 and MoneyWave >= 80; # and Close <= MovAvgExponential(length = 250);
 
-plot BEARISH = HurstOsc > ExtremeValue and RSI >= 95 and MoneyWave >= 80; #and close <= MovAvgExponential(length = 250);
+def target = RSI <= 25;
 
-plot RATING = if BULLISH then 1 else if BEARISH then .5 else 0;
+DEF SHARES = ROUND(2000 / CLOSE);
+DEF FOOBAR = SHARES;
 
-BULLISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
-BULLISH.AssignValueColor(Color.GREEN);
+#LONG POSITION:
+AddOrder(condition = ENTRY is true, TRADESIZE = FOOBAR, TICKCOLOR = GetColor(0), ARROWCOLOR = GetColor(0), NAME = "SE", price = close()[0], type = OrderType.SELL_TO_OPEN);
+ADDORDER(OrderType.BUY_TO_CLOSE, target IS TRUE, TRADESIZE = FOOBAR, TICKCOLOR = GETCOLOR(1), ARROWCOLOR = GETCOLOR(1), NAME = "SX", PRICE = Close());
 
-BEARISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
-BEARISH.AssignValueColor(Color.RED);
+##################################################

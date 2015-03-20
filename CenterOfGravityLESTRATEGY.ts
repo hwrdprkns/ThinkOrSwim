@@ -6,6 +6,7 @@ input length = 10;
 input rsi_length = 2;
 input kperiod = 5;
 input ExtremeValue = 2.6;
+input dollar_amt = 2000;
 
 def MoneyWave = STOCHASTICSLOW("K PERIOD" = KPERIOD);
 
@@ -28,7 +29,7 @@ def entry = HurstOsc < -ExtremeValue and MoneyWave <= 20 and close >= MovAvgExpo
 
 def target = RSI >= 75;
 
-DEF SHARES = ROUND(2000 / CLOSE);
+DEF SHARES = ROUND(dollar_amt / CLOSE);
 
 #LONG POSITION:
 AddOrder(condition = ENTRY is true, TRADESIZE = SHARES, TICKCOLOR = GetColor(0), ARROWCOLOR = GetColor(0), NAME = "LE", price = close()[0], type = OrderType.BUY_TO_OPEN);

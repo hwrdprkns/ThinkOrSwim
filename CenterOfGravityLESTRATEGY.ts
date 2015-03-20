@@ -1,12 +1,13 @@
 # CenterOfGravity
-# WGRIFFITH2 (C) 2015
+# DREWGRIFFITH15 (C) 2015
 
 input price = close;
 input length = 10;
 input rsi_length = 2;
+input rsi_target = 75;
 input kperiod = 5;
 input ExtremeValue = 2.6;
-input dollar_amt = 2000;
+input dollar_amt = 5000;
 
 def MoneyWave = STOCHASTICSLOW("K PERIOD" = KPERIOD);
 
@@ -27,7 +28,7 @@ def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
 def entry = HurstOsc < -ExtremeValue and MoneyWave <= 20 and close >= MovAvgExponential(length = 300);
 
-def target = RSI >= 75;
+def target = RSI >= rsi_target;
 
 DEF SHARES = ROUND(dollar_amt / CLOSE);
 

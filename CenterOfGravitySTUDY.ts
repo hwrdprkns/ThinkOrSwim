@@ -5,7 +5,6 @@ declare upper;
 
 input price = close;
 input COGlength = 10;
-input rsi_length = 2;
 input kperiod = 5;
 input ExtremeValue = 2.6;
 
@@ -19,12 +18,6 @@ CMA[1] + (CMA[1] - CMA[2]);
 def OscValue = if close > close[1] then high else if close < close[1] then
 low else (high + low) / 2;
 def HurstOsc = ((100 * OscValue / CMA) - 100);
-
-# RSI
-def NETCHGAVG = WildersAverage(price - price[1], RSI_LENGTH);
-def TOTCHGAVG = WildersAverage(AbsValue(price - price[1]), RSI_LENGTH);
-def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
-def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
 plot BULLISH = HurstOsc < -ExtremeValue and MoneyWave <= 20 and close >= MovAvgExponential(length = 300);
 

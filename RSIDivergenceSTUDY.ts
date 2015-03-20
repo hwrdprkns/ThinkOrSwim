@@ -1,13 +1,15 @@
 # RSIDIVERGENCE
-# DREWGRIFFITH15 (C) 2014
+# DREWGRIFFITH15 (C) 2015
 
 # Looking for negative correlation between price and RSI
+# inputs based on 30 minute chart
 declare lower;
-input length = 20;
-input filter = 5;
+input RSI_length = 14;
+input cor_length = 60;
+input div_filter = 12;
 
-def rsi_sma = simplemovingAvg(rsiWilder(),filter);
+# RSI Divergence
+def rsi_sma = SimpleMovingAvg(reference RSI(length = RSI_length), div_filter);
+plot cor = Correlation(close, rsi_sma, cor_length);
 
-plot cor = Correlation(close, rsi_sma, length);
-
-cor.ASSIGNVALUECOLOR(IF cor <= 0 THEN COLOR.Yellow ELSE COLOR.GRAY);
+cor.AssignValueColor(if cor <= 0 then Color.YELLOW else Color.GRAY);

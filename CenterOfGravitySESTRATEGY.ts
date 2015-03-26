@@ -2,7 +2,7 @@
 # DREWGRIFFITH15 (C) 2015
 
 input price = close;
-input length = 10;
+input COGlength = 10;
 input rsi_length = 2;
 input rsi_target = 25;
 input kperiod = 5;
@@ -12,13 +12,14 @@ input dollar_amt = 5000;
 def MoneyWave = STOCHASTICSLOW("K PERIOD" = KPERIOD);
 
 # Hurst Osc or COG
-def displacement = (-length / 2) + 1;
+def displacement = (-COGlength / 2) + 1;
+
 def dPrice = price[displacement];
-def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(length)) else
+
+def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(COGlength)) else
 CMA[1] + (CMA[1] - CMA[2]);
-def OscValue = if close > close[1] then high else if close < close[1] then
-low else (high + low) / 2;
-def HurstOsc = ((100 * OscValue / CMA) - 100);
+
+def HurstOsc = ((100 * price / CMA) - 100);
 
 # RSI
 def NETCHGAVG = WildersAverage(price - price[1], RSI_LENGTH);

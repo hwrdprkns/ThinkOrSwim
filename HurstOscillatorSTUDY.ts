@@ -7,9 +7,9 @@ declare lower;
 
 input price = close;
 input length = 10;
-input InnerValue = 1.6;
-input OuterValue = 2.6;
-input ExtremeValue = 4.2;
+input InnerValue = 2.6;
+input OuterValue = 5.0;
+input ExtremeValue = 10;
 
 def displacement = (-length / 2) + 1;
 def dPrice = price[displacement];
@@ -17,12 +17,9 @@ def dPrice = price[displacement];
 def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(length)) else
 CMA[1] + (CMA[1] - CMA[2]);
 
-def OscValue = if close > close[1] then high else if close < close[1] then
-low else (high + low)/2;
-
-plot HurstOsc = if ((100 * OscValue/CMA) - 100) > 10 then 10
-else if  ((100 * OscValue/CMA) - 100) < -10 then -10
-else  ((100 * OscValue/CMA) - 100);
+plot HurstOsc = if ((100 * price/CMA) - 100) > 10 then 10
+else if  ((100 * price/CMA) - 100) < -10 then -10
+else  ((100 * price/CMA) - 100);
 
 HurstOsc.SetDefaultColor(GetColor(1));
 HurstOsc.SetLineWeight(2);
@@ -40,8 +37,10 @@ CenterLine.SetLineWeight(1);
 
 UpperExtremeBand.SetDefaultColor(GetColor(4));
 UpperExtremeBand.SetLineWeight(1);
+UpperExtremeBand.hide();
 LowerExtremeBand.SetDefaultColor(GetColor(4));
 LowerExtremeBand.SetLineWeight(1);
+LowerExtremeBand.hide();
 
 UpperOuterBand.SetDefaultColor(GetColor(5));
 UpperOuterBand.SetLineWeight(1);

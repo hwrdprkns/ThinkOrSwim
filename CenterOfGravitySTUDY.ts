@@ -12,12 +12,13 @@ def MoneyWave = STOCHASTICSLOW("K PERIOD" = KPERIOD);
 
 # Hurst Osc or COG
 def displacement = (-COGlength / 2) + 1;
+
 def dPrice = price[displacement];
+
 def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(COGlength)) else
 CMA[1] + (CMA[1] - CMA[2]);
-def OscValue = if close > close[1] then high else if close < close[1] then
-low else (high + low) / 2;
-def HurstOsc = ((100 * OscValue / CMA) - 100);
+
+def HurstOsc = ((100 * price / CMA) - 100);
 
 plot BULLISH = HurstOsc < -ExtremeValue and MoneyWave <= 20 and close >= MovAvgExponential(length = 300);
 
@@ -30,3 +31,5 @@ BULLISH.AssignValueColor(Color.GREEN);
 
 BEARISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
 BEARISH.AssignValueColor(Color.RED);
+
+RATING.Hide();

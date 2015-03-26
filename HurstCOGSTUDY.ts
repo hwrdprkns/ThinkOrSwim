@@ -1,10 +1,13 @@
+# HurstCOG
+# DREWGRIFFITH15 (C) 2015
+
 declare upper;
 
-input price = hl2;
+input price = close;
 input length = 10;
-input InnerValue = 1.6;
-input OuterValue = 2.6;
-input ExtremeValue = 4.2;
+input InnerValue = 2.6;
+input OuterValue = 5.0;
+input ExtremeValue = 10;
 input showClosingPriceLine = NO;
 input showPriceBar = YES;
 input smooth = 1;
@@ -12,12 +15,13 @@ input smooth = 1;
 def displacement = (-length / 2) + 1;
 def dPrice = price[displacement];
 
-rec CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(length)) else
+def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(length)) else
 CMA[1] + (CMA[1] - CMA[2]);
 
 plot CenteredMA = if !IsNaN(dPrice) then CMA else Double.NaN;
 CenteredMA.DefineColor("CMA", GetColor(1));
 CenteredMA.SetLineWeight(2);
+CenteredMA.Hide();
 
 plot CenterLine = if !IsNaN(price) then CMA else Double.NaN;
 CenterLine.DefineColor("CMA", GetColor(1));
@@ -26,6 +30,7 @@ CenterLine.AssignValueColor(if !IsNaN(dPrice) then CenterLine.color("CMA")
 else
 CenterLine.color("Extrapolated"));
 CenterLine.SetLineWeight(2);
+CenterLine.Hide();
 CenterLine.SetStyle(Curve.SHORT_DASH);
 
 def ExtremeBand = CMA * ExtremeValue / 100;;
@@ -46,9 +51,9 @@ plot LowerInnerBand = if !IsNaN(price) then CMA - InnerBand else
 Double.Nan;
 
 UpperExtremeBand.SetDefaultColor(GetColor(4));
-UpperExtremeBand.SetLineWeight(2);
+UpperExtremeBand.SetLineWeight(1);
 LowerExtremeBand.SetDefaultColor(GetColor(4));
-LowerExtremeBand.SetLineWeight(2);
+LowerExtremeBand.SetLineWeight(1);
 UpperExtremeBand.hide();
 LowerExtremeBand.hide();
 
@@ -59,19 +64,18 @@ LowerOuterBand.SetLineWeight(2);
 
 UpperInnerBand.SetDefaultColor(GetColor(9));
 UpperInnerBand.SetLineWeight(1);
+UpperInnerBand.Hide();
 UpperInnerBand.SetStyle(Curve.SHORT_DASH);
 LowerInnerBand.SetDefaultColor(GetColor(9));
 LowerInnerBand.SetLineWeight(1);
+LowerInnerBand.Hide();
 LowerInnerBand.SetStyle(Curve.SHORT_DASH);
 
 # Turn AddClouds off by putting a #-sign at the first position of the lines
 AddCloud(UpperOuterBand, UpperInnerBand, color.red);
 AddCloud(LowerInnerBand, LowerOuterBand, color.green);
 
-def FlowValue = if close > close[1] then high else if close < close[1] then
-low else (high + low)/2;
-
-plot FlowPrice = if showClosingPriceLine then Average(FlowValue, smooth)
+plot FlowPrice = if showClosingPriceLine then Average(price, smooth)
 else double.nan;
 FlowPrice.SetDefaultColor(GetColor(9));
 FlowPrice.SetLineWeight(2);

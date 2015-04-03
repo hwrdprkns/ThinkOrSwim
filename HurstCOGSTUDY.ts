@@ -3,19 +3,21 @@
 
 declare upper;
 
+# Daily settings / 15 minute chart
+
 input price = close;
-input length = 10;
-input InnerValue = 2.6;
-input OuterValue = 5.0;
-input ExtremeValue = 10;
+input COGlength = 10; #60
+input InnerValue = 2.6; #1.6
+input OuterValue = 5.0; #2.6
+input ExtremeValue = 10.0; #4.0
 input showClosingPriceLine = NO;
 input showPriceBar = YES;
 input smooth = 1;
 
-def displacement = (-length / 2) + 1;
+def displacement = (-COGlength / 2) + 1;
 def dPrice = price[displacement];
 
-def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(length)) else
+def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(COGlength)) else
 CMA[1] + (CMA[1] - CMA[2]);
 
 plot CenteredMA = if !IsNaN(dPrice) then CMA else Double.NaN;

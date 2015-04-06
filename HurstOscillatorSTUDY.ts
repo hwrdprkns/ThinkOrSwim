@@ -5,24 +5,20 @@
 
 declare lower;
 
-# Daily settings / 15 minute chart
 input price = close;
-input COGlength = 10; #60
-input ExtremeValue = 2.6; #1.6
-input kperiod = 5;
+input COGlength = 10;
+input InnerValue = 2.6;
+input OuterValue = 4.0;
+input ExtremeValue = 10;
 
 # Hurst Osc or COG
 def displacement = (-COGlength / 2) + 1;
+def dPrice = price[displacement];
 
-plot dPrice = price[displacement];
+def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(COGlength)) else
+CMA[1] + (CMA[1] - CMA[2]);
 
-plot ddPrice = dPrice[-displacement];
-
-def CMA = Average(ddPrice, AbsValue(COGlength));
-
-plot HurstOsc = if ((100 * price/CMA) - 100) > ExtremeValue then ExtremeValue
-else if  ((100 * price/CMA) - 100) < -ExtremeValue then -ExtremeValue
-else  ((100 * price/CMA) - 100);
+plot HurstOsc = ((100 * price/CMA) - 100);
 
 HurstOsc.SetDefaultColor(GetColor(1));
 HurstOsc.SetLineWeight(2);

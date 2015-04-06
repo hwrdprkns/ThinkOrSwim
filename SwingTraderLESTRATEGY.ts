@@ -1,25 +1,25 @@
-# CenterOfGravity
+# SwingTrader Long Entry
 # DREWGRIFFITH15 (C) 2015
 
-# Daily settings / 15 minute chart
+# Daily settings; Not recommended for intraday trading because COG "repaints"
 
 input dollar_amt = 5000;
 input price = close;
-input COGlength = 10; #60
+input COGlength = 10;
+input ExtremeValue = 2.6;
 input rsi_length = 2;
-input rsi_ob = 95; #95
-input rsi_os = 5; #5
-input ExtremeValue = 2.6; #1.6
+input rsi_ob = 95;
+input rsi_os = 5;
 input kperiod = 5;
-input BB_Length = 13; #27
-input BB_Upper = 1.6; #2.0
-input BB_Lower = -1.6; #2.0
-input RSI_target = 75; #90
+input BB_Length = 13;
+input BB_Upper = 1.6;
+input BB_Lower = -1.6;
+input RSI_Target = 75;
 
 # BollingerBands to confirm COG
-def percentB = BollingerPercentB(length = BB_Length, "num dev dn" = BB_Lower, "num dev up" = BB_Upper);
+def percentB = BollingerPercentB(length = BB_Length, "num dev dn" = BB_Lower, "num dev up" = BB_Upper, "average type" = "EXPONENTIAL");
 
-def MoneyWave = STOCHASTICSLOW("K PERIOD" = KPERIOD);
+def MoneyWave = StochasticFull("k period" = 5);
 
 # Hurst Osc or COG
 def displacement = (-COGlength / 2) + 1;
@@ -37,8 +37,7 @@ def TOTCHGAVG = WildersAverage(AbsValue(price - price[1]), RSI_LENGTH);
 def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
 def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
-# For daily, you want to add the close > EMA300 requirement; Not needed for 15 minute chart
-def BULLISH = HurstOsc < -ExtremeValue and MoneyWave <= 20 and RSI <= RSI_os and percentB <= 0 and close >= MovAvgExponential(length = 300);
+def BULLISH = HurstOsc > ExtremeValue and MoneyWave <= 20 and RSI <= RSI_os and percentB <= 0 and close >= MovAvgExponential(length = 300);
 
 def target = RSI >= RSI_Target;
 

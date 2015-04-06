@@ -1,10 +1,10 @@
-# DayTrader
+# DayTraderShortEntry
 # DREWGRIFFITH15 (C) 2015
-
-declare upper;
 
 # Inputs based on 15 minute chart
 
+input dollar_amt = 5000;
+input RSI_Target = 10;
 input price = close;
 input rsi_length = 2;
 input rsi_ob = 95;
@@ -33,19 +33,13 @@ def TOTCHGAVG = WildersAverage(AbsValue(price - price[1]), RSI_LENGTH);
 def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
 def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
-plot BULLISH = MoneyWave <= 20 and RSI <= RSI_os and HurstOsc <= -ExtremeValue and price < hl2;
-
 plot BEARISH = MoneyWave >= 80 and RSI >= RSI_ob and HurstOsc >= ExtremeValue and price > hl2;
 
-plot RATING = if BULLISH then 1 else if BEARISH then .5 else 0;
+def target = RSI <= RSI_Target;
 
-BULLISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
-BULLISH.AssignValueColor(Color.GREEN);
+DEF SHARES = ROUND(dollar_amt / CLOSE);
 
-BEARISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
-BEARISH.AssignValueColor(Color.RED);
+ADDORDER(condition = BEARISH is true, TRADESIZE = SHARES, TICKCOLOR = GetColor(0), ARROWCOLOR = GetColor(0), NAME = "SE", price = close()[0], type = OrderType.SELL_TO_OPEN);
+ADDORDER(OrderType.BUY_TO_CLOSE, target IS TRUE, TRADESIZE = SHARES, TICKCOLOR = GETCOLOR(1), ARROWCOLOR = GETCOLOR(1), NAME = "SX", PRICE = Close());
 
-RATING.Hide();
-
-alert((RATING == 1), "CenterofGravity CALL", "alert type" = Alert.BAR, sound = Sound.Ding);
-alert((RATING == .5), "CenterofGravity PUT", "alert type" = Alert.BAR, sound = Sound.Ding);
+##################################################

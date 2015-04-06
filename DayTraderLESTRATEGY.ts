@@ -1,10 +1,10 @@
-# DayTrader
+# DayTraderLongEntry
 # DREWGRIFFITH15 (C) 2015
-
-declare upper;
 
 # Inputs based on 15 minute chart
 
+input dollar_amt = 5000;
+input RSI_Target = 90;
 input price = close;
 input rsi_length = 2;
 input rsi_ob = 95;
@@ -35,17 +35,12 @@ def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
 plot BULLISH = MoneyWave <= 20 and RSI <= RSI_os and HurstOsc <= -ExtremeValue and price < hl2;
 
-plot BEARISH = MoneyWave >= 80 and RSI >= RSI_ob and HurstOsc >= ExtremeValue and price > hl2;
+def target = RSI >= RSI_Target;
 
-plot RATING = if BULLISH then 1 else if BEARISH then .5 else 0;
+DEF SHARES = ROUND(dollar_amt / CLOSE);
 
-BULLISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
-BULLISH.AssignValueColor(Color.GREEN);
+#LONG POSITION:
+AddOrder(condition = BULLISH is true, TRADESIZE = SHARES, TICKCOLOR = GetColor(0), ARROWCOLOR = GetColor(0), NAME = "LE", price = close()[0], type = OrderType.BUY_TO_OPEN);
+ADDORDER(OrderType.SELL_TO_CLOSE, target IS TRUE, TRADESIZE = SHARES, TICKCOLOR = GETCOLOR(1), ARROWCOLOR = GETCOLOR(1), NAME = "LX", PRICE = Close());
 
-BEARISH.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
-BEARISH.AssignValueColor(Color.RED);
-
-RATING.Hide();
-
-alert((RATING == 1), "CenterofGravity CALL", "alert type" = Alert.BAR, sound = Sound.Ding);
-alert((RATING == .5), "CenterofGravity PUT", "alert type" = Alert.BAR, sound = Sound.Ding);
+##################################################

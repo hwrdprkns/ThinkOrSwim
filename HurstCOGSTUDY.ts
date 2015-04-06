@@ -6,10 +6,10 @@ declare upper;
 # Daily settings / 15 minute chart
 
 input price = close;
-input COGlength = 10; #60
-input InnerValue = 2.6; #1.6
-input OuterValue = 5.0; #2.6
-input ExtremeValue = 10.0; #4.0
+input COGlength = 10;
+input InnerValue = 1.6; # 0.40
+input OuterValue = 2.6; # 0.65
+input ExtremeValue = 4.2; # 1.05
 input showClosingPriceLine = NO;
 input showPriceBar = YES;
 input smooth = 1;

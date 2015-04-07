@@ -3,15 +3,15 @@
 
 declare upper;
 
-# Inputs based on 15 minute chart
+# Inputs based on 30 minute chart
 
 input price = close;
 input rsi_length = 2;
 input rsi_ob = 95;
 input rsi_os = 5;
 input kperiod = 5;
-input COGlength = 10;
-input ExtremeValue = 0.65;
+input COGlength = 20;
+input ExtremeValue = 1.6;
 
 # Hurst Osc or COG
 def displacement = (-COGlength / 2) + 1;

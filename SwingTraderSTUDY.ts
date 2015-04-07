@@ -33,9 +33,9 @@ def TOTCHGAVG = WildersAverage(AbsValue(price - price[1]), RSI_LENGTH);
 def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
 def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
 
-plot BULLISH = MoneyWave <= 20 and RSI <= RSI_os and HurstOsc <= -ExtremeValue and price < hl2;
+plot BULLISH = MoneyWave <= 20 and RSI <= RSI_os and HurstOsc <= -ExtremeValue;
 
-plot BEARISH = MoneyWave >= 80 and RSI >= RSI_ob and HurstOsc >= ExtremeValue and price > hl2;
+plot BEARISH = MoneyWave >= 80 and RSI >= RSI_ob and HurstOsc >= ExtremeValue;
 
 plot RATING = if BULLISH then 1 else if BEARISH then .5 else 0;
 

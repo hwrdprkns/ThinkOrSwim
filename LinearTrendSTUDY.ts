@@ -1,4 +1,4 @@
-# AdaptiveCOG
+# LinearTrend
 # DREWGRIFFITH15 (C) 2015
 
 declare upper;

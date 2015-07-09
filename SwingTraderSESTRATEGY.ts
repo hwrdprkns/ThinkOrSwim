@@ -1,46 +1,59 @@
 # SwingTraderShortEntry
-# DREWGRIFFITH15 (C) 2015
 
-# Daily settings
+# Designed for use on daily charts
+# The InSync Index is used detect extreme levels.
+# Values higher or equal to 55 are considered to be high extreme levels. (sell)
+# Values lower or equal than -55 are considered to be low extreme levels. (buy)
 
 input dollar_amt = 5000;
-input RSI_Target = 25;
 input price = close;
+input RSI_Target = 25;
 input rsi_length = 2;
 input rsi_ob = 95;
 input rsi_os = 5;
-input kperiod = 5;
-input COGlength = 10;
-input ExtremeValue = 1.6;
 
-# Hurst Osc or COG
-def displacement = (-COGlength / 2) + 1;
-def dPrice = price[displacement];
+## ENTRY
+# Study Definitions
+def smooth = 1;
+def bbCalc = BollingerPercentB();
+def macd1 = MACD(8, 17);
+def macd2 = macd1 - (MACD(8, 10) - MACD(17, 20));
+def rsi = reference RSI(length = 2);
+def change = RateOfChange(10);
+def dpo = DetrendedPriceOsc();
+def eom = EaseOfMovement();
+def mf = MoneyFlowIndex();
+def stoch = StochasticFull("k period" = 5);
+def bomp = BalanceOfMarketPower();
+def cc = CCI();
 
-def CMA = if !IsNaN(dPrice) then Average(dPrice, AbsValue(COGlength)) else
-CMA[1] + (CMA[1] - CMA[2]);
+# Indicator Scoring
+def bb = if bbCalc > 95 then 5 else if bbCalc < 5 then -5 else 0;
+def cci = if cc > 100 then 5 else if cc < -100 then -5 else 0;
+def macd = if macd1 > 0 and macd2 > 0 then 5 else if macd1 < 0 and macd2 < 0 then -5 else 0;
+def roc = if change > 1 and change > ExpAverage(change, 10) then 5 else if change < 1 and change < ExpAverage(change, 10) then -5 else 0;
+def sto = if stoch > 80 then 10 else if stoch < 20 then -10 else 0;
+def rsiW = if rsi > 95 then 5 else if rsi < 5 then -5 else 0;
+def bop = if bomp > 0 and bomp > ExpAverage(bomp, 10) then 5 else if bomp < 0 and bomp < ExpAverage(bomp, 10) then
+-5 else 0;
+def dp = if dpo > 0 then 5 else if dpo < 0 then -5 else 0;
+def emv = if eom > 0 then 5 else if eom < 0 then -5 else 0;
+def mfi = if mf > 50 then 5 else if mf < 40 then -5 else 0;
 
-def HurstOsc = if ((100 * price/CMA) - 100) > ExtremeValue then ExtremeValue
-else if ((100 * price/CMA) - 100) < -ExtremeValue then -ExtremeValue
-else ((100 * price/CMA) - 100);
+# Point Sum / Plot
+def sum = bb + cci + macd + roc + sto + rsiW + bop + dp + emv + mfi;
+def inSync = ExpAverage(sum, smooth);
+def entry = inSync == 55;
 
-# Stochastic
-def MoneyWave = StochasticFull("k period" = 5);
+## EXIT
+def entryPrice = entryPrice();
+def pricetarget = if entryPrice then min(low[1],entryPrice) else Double.NaN;
 
-# RSI
-def NETCHGAVG = WildersAverage(price - price[1], RSI_LENGTH);
-def TOTCHGAVG = WildersAverage(AbsValue(price - price[1]), RSI_LENGTH);
-def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
-def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
+def target = low <= pricetarget or rsi <= RSI_Target;
 
-plot BEARISH = MoneyWave >= 80 and RSI >= RSI_ob and HurstOsc >= ExtremeValue
-and close <= MovAvgExponential(length = 300);
+def Shares = AbsValue(Round(dollar_amt / close));
 
-def target = RSI <= RSI_Target;
-
-DEF SHARES = ROUND(dollar_amt / CLOSE);
-
-ADDORDER(condition = BEARISH is true, TRADESIZE = SHARES, TICKCOLOR = GetColor(0), ARROWCOLOR = GetColor(0), NAME = "SE", price = close()[0], type = OrderType.SELL_TO_OPEN);
-ADDORDER(OrderType.BUY_TO_CLOSE, target IS TRUE, TRADESIZE = SHARES, TICKCOLOR = GETCOLOR(1), ARROWCOLOR = GETCOLOR(1), NAME = "SX", PRICE = Close());
+AddOrder(condition = entry is true, tradeSize = Shares, tickcolor = GetColor(0), arrowcolor = GetColor(0), name = "LE", price = close()[0]);
+AddOrder(OrderType.SELL_TO_CLOSE, target is true, tradeSize = Shares, tickcolor = GetColor(1), arrowcolor = GetColor(1), name = "LX", price = pricetarget);
 
 ##################################################

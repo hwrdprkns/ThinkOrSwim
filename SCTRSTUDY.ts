@@ -1,5 +1,8 @@
 # SCTR
-# DREWGRIFFITH15 (C) 2015
+
+# THIS STUDY IS A REPLICATION OF STOCKCHARTS TECHNICAL RANKING
+# http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr
+# designed for use on daily charts
 
 declare lower;
 
@@ -13,9 +16,6 @@ input LT_WEIGHT = .30;
 input MD_WEIGHT = .15;
 input SH_WEIGHT = .05;
 input SR_LENGTH = 40;
-
-# THIS STUDY IS A REPLICATION OF STOCKCHARTS TECHNICAL RANKING
-# http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr
 
 #Long-Term Indicators (weighting)
 #  * Percent above/below 200-day SMA (30%)

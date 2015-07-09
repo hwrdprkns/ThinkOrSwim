@@ -83,7 +83,7 @@ CLOSE()>HIGHEST(DATA = CLOSE, LENGTH = 60)[1] AND
 CLOSE < LOWEST(DATA = LOW, LENGTH = 8)[1]) AND
 VOLUMEAVG(LENGTH = 10) > VOLUMEAVG(LENGTH = 10).VOLAVG
 ##################################################################
-# SWING BOX BREAKOUT
+# SWING BREAKOUT
 (CLOSE > HIGHEST(DATA = CLOSE, LENGTH = 2)[1]) AND
 VOLUMEAVG(LENGTH = 20) > VOLUMEAVG(LENGTH = 20).VOLAVG AND
 STOCHASTICSLOW("K PERIOD" = 14, "D PERIOD" = 3) <= 60 AND
@@ -99,4 +99,23 @@ Close>Close[1]
 ##################################################################
 # RSI SUPPORT / RESISTANCE BREAKOUT
 reference RSI_SR(rsisr = 20).RSI == RSI_SR(rsisr = 20).RSI_HIGH and RSI_SR(rsisr = 20).RSI_HIGH <= 60
+##################################################################
+# RSI2 BASED EXIT ALERT
+input side = {DEFAULT LONG, SHORT};
+input target = 75;
+input rsi_length = 2;
+input price = close;
+# RSI
+def NETCHGAVG = WildersAverage(price - price[1], rsi_length);
+def TOTCHGAVG = WildersAverage(AbsValue(price - price[1]), rsi_length);
+def CHGRATIO = if TOTCHGAVG != 0 then NETCHGAVG / TOTCHGAVG else 0;
+def RSI = Round(50 * (CHGRATIO + 1), NUMBEROFDIGITS = 0);
+DEF LMT;
+SWITCH (SIDE) {
+CASE LONG:
+    LMT = RSI >= TARGET;
+CASE SHORT:
+    LMT = RSI <= TARGET;
+}
+PLOT EXIT = LMT;
 ##################################################################

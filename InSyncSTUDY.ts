@@ -1,13 +1,14 @@
-# inSync
-# DREWGRIFFITH15 (C) 2015
+# InSync
 
-#Hint:This is index is formed from signals on a variety of different technical indicators, and used
-# 		to determine extreme overbought/oversold values in the market.
-# Originally coded by Eric Rasmussen
+# This is index is formed from signals on a variety of different technical indicators, and used
+# to determine extreme overbought/oversold values in the market.
+# Originally coded by Eric Rasmussen and modified by Drew Griffith
 #
 # The InSync Index is used detect extreme levels.
 # Values higher or equal to 55 are considered to be high extreme levels. (sell)
 # Values lower or equal than -55 are considered to be low extreme levels. (buy)
+
+# Designed for use on daily charts
 
 declare lower;
 
@@ -56,3 +57,7 @@ neg55.AssignValueColor(Color.GREEN);
 zero.HideTitle();
 pos55.HideTitle();
 neg55.HideTitle();
+
+# Alerts
+alert((sum == -55), "inSync LE", "alert type" = Alert.BAR, sound = Sound.Ding);
+alert((sum == 55), "inSync SE", "alert type" = Alert.BAR, sound = Sound.Ding);

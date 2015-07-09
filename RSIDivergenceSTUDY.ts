@@ -1,5 +1,4 @@
 # RSIDIVERGENCE
-# DREWGRIFFITH15 (C) 2015
 
 declare lower;
 
@@ -10,13 +9,13 @@ input MidLine = 50;
 input nTrend = 100;
 input TrendLine = {EMA, SMA, default LRL, WMA};
 
-# Global definitions 
+# Global definitions
 def h = high;
 def l = low;
 def c = close;
 
 def cond1 = CompoundValue(1, if IsNaN(c)
-                            then cond1[1] 
+                            then cond1[1]
                             else c, c);
 
 
@@ -52,18 +51,18 @@ RSIOS.SetDefaultColor(Color.Blue);
 
 def lowestLow = if RSI > OverSold
                then l
-               else if RSI < OverSold and 
+               else if RSI < OverSold and
                        l < lowestLow[1]
                then l
                else lowestLow[1];
 def lowestRSI = if RSI > MidLine
                then RSI
-               else if RSI < MidLine and 
+               else if RSI < MidLine and
                        RSI < lowestRSI[1]
                then RSI
                else lowestRSI[1];
 def divergentLow = if RSI < OverSold and
-                  l <= lowestLow[1] and 
+                  l <= lowestLow[1] and
                   RSI > lowestRSI[1]
                   then OverSold
                   else Double.NaN;
@@ -74,18 +73,18 @@ DLow.SetDefaultColor(Color.YELLOW);
 
 def highestHigh = if RSI < OverBought
                  then h
-                 else if RSI > OverBought and 
+                 else if RSI > OverBought and
                          h > highestHigh[1]
                  then h
                  else highestHigh[1];
 def highestRSI = if RSI < MidLine
                 then RSI
-                else if RSI > MidLine and 
+                else if RSI > MidLine and
                         RSI > highestRSI[1]
                 then RSI
                 else highestRSI[1];
 def divergentHigh = if RSI > OverBought and
-                      h >= highestHigh[1] and 
+                      h >= highestHigh[1] and
                       RSI < highestRSI[1] and
                       cond1 within 3 bars
                    then OverBought

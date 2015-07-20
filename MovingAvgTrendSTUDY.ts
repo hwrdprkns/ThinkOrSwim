@@ -1,18 +1,36 @@
 # Use this study on multiple time frames, you will see trends.
 # All timeframes must show short (2) or long (1) to initiate a purchase.
 
-declare lower;
+input short_average = 5;
+input medium_average = 10;
+input long_average = 20;
+input average_type = {default "SMA", "EMA"};
 
-input MA = {EMA, default SMA, WMA};
-input short_length = 5;
-input medium_length = 10;
-input long_length = 20;
+def MA1;
+def MA2;
+def MA3;
+switch (average_type) {
 
-plot signal = if MovingAverage(MA,CLOSE, length = medium_length) > MovingAverage(MA,CLOSE, length = long_length) and
-MovingAverage(MA,CLOSE, length = short_length) > MovingAverage(MA,CLOSE, length = medium_length) then 1
-else if MovingAverage(MA,CLOSE, length = medium_length) < MovingAverage(MA,CLOSE, length = long_length) and
-MovingAverage(MA,CLOSE, length = short_length) < MovingAverage(MA,CLOSE, length = medium_length) then 2
-else 0;
+case "SMA":
+    MA1 = Average(close, short_average);
+    MA2 = Average(close, medium_average);
+    MA3 = Average(close, long_average);
 
-signal.AssignValueColor(if signal == 1 then Color.Green else if signal == 2 then Color.Red else Color.Gray);
-AssignPriceColor(if signal == 1 then Color.Green else if signal == 2 then Color.Red else Color.Gray);
+case "EMA":
+    MA1 = ExpAverage(close, short_average);
+    MA2 = ExpAverage(close, medium_average);
+    MA3 = ExpAverage(close, long_average);
+}
+
+def Eup = if MA1 > MA2 && MA2 > MA3 then 1 else
+0;
+def Edn = if MA1 < MA2 && MA2 < MA3 then 1 else
+0;
+plot signal = if Eup then 1 else if Edn then 2 else 0;
+
+signal.AssignValueColor(if Eup then Color.LIGHT_GREEN
+else if Edn then Color.LIGHT_RED else Color.GRAY);
+
+AssignBackgroundColor(if Eup then
+Color.LIGHT_GREEN else if Edn then Color.LIGHT_RED else
+Color.GRAY);

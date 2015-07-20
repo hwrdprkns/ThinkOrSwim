@@ -4,7 +4,7 @@
 input short_average = 5;
 input medium_average = 10;
 input long_average = 20;
-input average_type = {default "SMA", "EMA"};
+input average_type = {default "SMA", "EMA", "WMA"};
 
 def MA1;
 def MA2;
@@ -20,6 +20,11 @@ case "EMA":
     MA1 = ExpAverage(close, short_average);
     MA2 = ExpAverage(close, medium_average);
     MA3 = ExpAverage(close, long_average);
+
+case "WMA":
+    MA1 = WildersSmoothing(close, short_average);
+    MA2 = WildersSmoothing(close, medium_average);
+    MA3 = WildersSmoothing(close, long_average);
 }
 
 def Eup = if MA1 > MA2 && MA2 > MA3 then 1 else

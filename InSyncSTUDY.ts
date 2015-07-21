@@ -5,8 +5,8 @@
 # Originally coded by Eric Rasmussen and modified by Drew Griffith
 #
 # The InSync Index is used detect extreme levels.
-# Values higher or equal to 55 are considered to be high extreme levels. (sell)
-# Values lower or equal than -55 are considered to be low extreme levels. (buy)
+# Values higher or equal to 55 are considered to be high extreme levels. (short)
+# Values lower or equal than -55 are considered to be low extreme levels. (long)
 
 # Designed for use on daily charts
 

@@ -29,18 +29,17 @@ def sum = bb + sto + rsiW;
 
 # Plots
 plot inSync = ExpAverage(sum, smooth);
-plot zero = if IsNaN(close) then Double.NaN else 0;
-plot pos20 = if IsNaN(close) then Double.NaN else 20;
-plot neg20 = if IsNaN(close) then Double.NaN else -20;
-inSync.AssignValueColor(if sum > 0 then Color.GREEN else  Color.RED);
+#plot zero = if IsNaN(close) then Double.NaN else 0;
+#plot pos20 = if IsNaN(close) then Double.NaN else 20;
+#plot neg20 = if IsNaN(close) then Double.NaN else -20;
+inSync.AssignValueColor(if sum > 0 then Color.GREEN else if sum < 0 then Color.RED else Color.Gray);
 inSync.SetLineWeight(2);
-zero.AssignValueColor(Color.LIGHT_GRAY);
-pos20.AssignValueColor(Color.RED);
-neg20.AssignValueColor(Color.GREEN);
-zero.HideTitle();
-pos20.HideTitle();
-neg20.HideTitle();
+#zero.AssignValueColor(Color.LIGHT_GRAY);
+#pos20.AssignValueColor(Color.RED);
+#neg20.AssignValueColor(Color.GREEN);
+#zero.HideTitle();
+#pos20.HideTitle();
+#neg20.HideTitle();
 
-# Alerts
-Alert((sum == -20), "LE", "alert type" = Alert.BAR, sound = Sound.Ding);
-Alert((sum == 20), "SE", "alert type" = Alert.BAR, sound = Sound.Ding);
+# Needed for Watchlist box painting
+AssignBackgroundColor(if sum == 20 then Color.GREEN else if sum == -20 then Color.RED else Color.Gray);

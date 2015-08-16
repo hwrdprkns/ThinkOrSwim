@@ -34,14 +34,14 @@ plot inSync = ExpAverage(sum, smooth);
 plot zero = if IsNaN(close) then Double.NaN else 0;
 plot pos25 = if IsNaN(close) then Double.NaN else 25;
 plot neg25 = if IsNaN(close) then Double.NaN else -25;
-inSync.AssignValueColor(if sum > 0 then Color.GREEN else if sum < 0 then Color.RED else Color.Gray);
+inSync.AssignValueColor(if sum > 0 then Color.RED else if sum < 0 then Color.GREEN else Color.Gray);
 inSync.SetLineWeight(2);
 zero.AssignValueColor(Color.LIGHT_GRAY);
-pos25.AssignValueColor(Color.RED);
-neg25.AssignValueColor(Color.GREEN);
+pos25.AssignValueColor(Color.GREEN);
+neg25.AssignValueColor(Color.RED);
 zero.HideTitle();
 pos25.HideTitle();
 neg25.HideTitle();
 
 # Needed for Watchlist box painting
-#AssignBackgroundColor(if sum == 25 then Color.GREEN else if sum == -25 then Color.RED else Color.Gray);
+#AssignBackgroundColor(if sum == 25 then Color.RED else if sum == -25 then Color.GREEN else Color.Gray);

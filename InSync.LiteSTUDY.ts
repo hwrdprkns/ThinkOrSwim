@@ -20,14 +20,16 @@ input smooth = 1;
 def bbCalc = BollingerPercentB();
 def rsi = reference RSI(length = 2);
 def stoch = StochasticFull("k period" = 5);
+def mf = MoneyFlowIndex();
 
 # Indicator Scoring
 def bb = if bbCalc > 95 then 5 else if bbCalc < 5 then -5 else 0;
-def sto = if stoch > 80 then 10 else if stoch < 20 then -10 else 0;
+def sto = if stoch > 80 then 5 else if stoch < 20 then -5 else 0;
 def rsiW = if rsi > 95 then 10 else if rsi < 5 then -10 else 0;
+def mfi = if mf > 50 then 5 else if mf < 40 then -5 else 0;
 
 # Point Sum
-def sum = bb + sto + rsiW;
+def sum = bb + sto + rsiW + mfi;
 
 # Plots
 plot inSync = ExpAverage(sum, smooth);
@@ -39,9 +41,9 @@ inSync.SetLineWeight(2);
 zero.AssignValueColor(Color.LIGHT_GRAY);
 pos25.AssignValueColor(Color.GREEN);
 neg25.AssignValueColor(Color.RED);
-zero.HideTitle();
-pos25.HideTitle();
-neg25.HideTitle();
+zero.Hide();
+pos25.Hide();
+neg25.Hide();
 
 # Needed for Watchlist box painting
 #AssignBackgroundColor(if sum == 25 then Color.RED else if sum == -25 then Color.GREEN else Color.Gray);

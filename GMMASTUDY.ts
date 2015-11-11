@@ -1,48 +1,86 @@
 # GMMA
-# DREWGRIFFITH15 (C) 2014
+# DREWGRIFFITH15 (C) 2015
 
-INPUT EMA1 = 4;
-INPUT EMA2 = 6;
-INPUT EMA3 = 8;
-INPUT EMA4 = 10;
-INPUT EMA5 = 12;
-INPUT EMA6 = 20;
-INPUT EMA7 = 30;
-INPUT EMA8 = 40;
-INPUT EMA9 = 50;
-INPUT EMA10 = 60;
+input EMA1 = 3;
+input EMA2 = 5;
+input EMA3 = 7;
+input EMA4 = 10;
+input EMA5 = 12;
+input EMA6 = 15;
+input EMA7 = 30;
+input EMA8 = 35;
+input EMA9 = 40;
+input EMA10 = 45;
+input EMA11 = 50;
+input EMA12 = 60;
+input show_bubble_labels = yes;
 
-PLOT GMMA1 = EXPAVERAGE(CLOSE,EMA1);
-PLOT GMMA2 = EXPAVERAGE(CLOSE,EMA2);
-PLOT GMMA3 = EXPAVERAGE(CLOSE,EMA3);
-PLOT GMMA4 = EXPAVERAGE(CLOSE,EMA4);
-PLOT GMMA5 = EXPAVERAGE(CLOSE,EMA5);
-PLOT GMMA6 = EXPAVERAGE(CLOSE,EMA6);
-PLOT GMMA7 = EXPAVERAGE(CLOSE,EMA7);
-PLOT GMMA8 = EXPAVERAGE(CLOSE,EMA8);
-PLOT GMMA9 = EXPAVERAGE(CLOSE,EMA9);
-PLOT GMMA10 = EXPAVERAGE(CLOSE,EMA10);
-PLOT SMA200 = EXPAVERAGE(CLOSE,250);
+plot GMMA1 = ExpAverage(close, EMA1);
+plot GMMA2 = ExpAverage(close, EMA2);
+plot GMMA3 = ExpAverage(close, EMA3);
+plot GMMA4 = ExpAverage(close, EMA4);
+plot GMMA5 = ExpAverage(close, EMA5);
+plot GMMA6 = ExpAverage(close, EMA6);
+plot GMMA7 = ExpAverage(close, EMA7);
+plot GMMA8 = ExpAverage(close, EMA8);
+plot GMMA9 = ExpAverage(close, EMA9);
+plot GMMA10 = ExpAverage(close, EMA10);
+plot GMMA11 = ExpAverage(close, EMA11);
+plot GMMA12 = ExpAverage(close, EMA12);
 
-GMMA1.SETDEFAULTCOLOR(GETCOLOR(1));
-GMMA1.HIDEBUBBLE();
-GMMA2.SETDEFAULTCOLOR(GETCOLOR(1));
-GMMA2.HIDEBUBBLE();
-GMMA3.SETDEFAULTCOLOR(GETCOLOR(1));
-GMMA3.HIDEBUBBLE();
-GMMA4.SETDEFAULTCOLOR(GETCOLOR(1));
-GMMA4.HIDEBUBBLE();
-GMMA5.SETDEFAULTCOLOR(GETCOLOR(1));
-GMMA5.HIDEBUBBLE();
-GMMA6.SETDEFAULTCOLOR(GETCOLOR(0));
-GMMA6.HIDEBUBBLE();
-GMMA7.SETDEFAULTCOLOR(GETCOLOR(0));
-GMMA7.HIDEBUBBLE();
-GMMA8.SETDEFAULTCOLOR(GETCOLOR(0));
-GMMA8.HIDEBUBBLE();
-GMMA9.SETDEFAULTCOLOR(GETCOLOR(0));
-GMMA9.HIDEBUBBLE();
-GMMA10.ASSIGNVALUECOLOR(COLOR.RED);
-GMMA10.SETLINEWEIGHT(3);
-GMMA10.HIDEBUBBLE();
-SMA200.ASSIGNVALUECOLOR(COLOR.GREEN);
+plot signalUP = close > GMMA1 &&
+                close > GMMA2 &&
+                close > GMMA3 &&
+                close > GMMA4 &&
+                close > GMMA5 &&
+                close > GMMA6 &&
+                close > GMMA7 &&
+                close > GMMA8 &&
+                close > GMMA9 &&
+                close > GMMA10 &&
+                close > GMMA11 &&
+                close crosses above GMMA12;
+
+plot signalDN = close < GMMA1 &&
+                close < GMMA2 &&
+                close < GMMA3 &&
+                close < GMMA4 &&
+                close < GMMA5 &&
+                close < GMMA6 &&
+                close < GMMA7 &&
+                close < GMMA8 &&
+                close < GMMA9 &&
+                close < GMMA10 &&
+                close < GMMA11 &&
+                close crosses below GMMA12;
+
+# Show Call / Put Signal in a Chart Bubble
+AddChartBubble(SignalUp && show_bubble_labels, low - 0.2, "Up", Color.UPTICK, no);
+AddChartBubble(SignalDn && show_bubble_labels, high + 0.2, "Dn", Color.LIGHT_RED);
+
+GMMA1.AssignValueColor(Color.BLUE);
+GMMA1.HideBubble();
+GMMA2.AssignValueColor(Color.BLUE);
+GMMA2.HideBubble();
+GMMA3.AssignValueColor(Color.BLUE);
+GMMA3.HideBubble();
+GMMA4.AssignValueColor(Color.BLUE);
+GMMA4.HideBubble();
+GMMA5.AssignValueColor(Color.BLUE);
+GMMA5.HideBubble();
+GMMA6.AssignValueColor(Color.BLUE);
+GMMA6.HideBubble();
+GMMA6.SetLineWeight(3);
+GMMA7.AssignValueColor(Color.RED);
+GMMA7.HideBubble();
+GMMA8.AssignValueColor(Color.RED);
+GMMA8.HideBubble();
+GMMA9.AssignValueColor(Color.RED);
+GMMA9.HideBubble();
+GMMA10.AssignValueColor(Color.RED);
+GMMA10.HideBubble();
+GMMA11.AssignValueColor(Color.RED);
+GMMA11.HideBubble();
+GMMA12.AssignValueColor(Color.RED);
+GMMA12.HideBubble();
+GMMA12.SetLineWeight(3);

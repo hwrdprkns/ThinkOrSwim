@@ -49,7 +49,7 @@ plot inSync = ExpAverage(sum, smooth);
 plot zero = if IsNaN(close) then Double.NaN else 0;
 plot pos55 = if IsNaN(close) then Double.NaN else 55;
 plot neg55 = if IsNaN(close) then Double.NaN else -55;
-inSync.AssignValueColor(if sum > 0 then Color.RED else  Color.GREE);
+inSync.AssignValueColor(if sum > 0 then Color.RED else  Color.GREEN);
 inSync.SetLineWeight(2);
 zero.AssignValueColor(Color.LIGHT_GRAY);
 pos55.AssignValueColor(Color.GREEN);
